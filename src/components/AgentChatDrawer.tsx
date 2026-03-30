@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { type Agent } from "@/data/mockData";
-import { X, Send } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { X, Send, Terminal } from "lucide-react";
 
 interface Message {
   id: string;
@@ -10,14 +9,14 @@ interface Message {
   timestamp: string;
 }
 
-const initialMessages: Record<string, Message[]> = {};
+const messageStore: Record<string, Message[]> = {};
 
 function getInitialMessage(agent: Agent): Message {
   return {
     id: "init",
     role: "agent",
-    content: `Hi, I'm ${agent.name}. ${agent.currentTask}. How can I help?`,
-    timestamp: "Just now",
+    content: `${agent.currentTask}. What do you need?`,
+    timestamp: "now",
   };
 }
 
@@ -28,10 +27,10 @@ export function AgentChatDrawer({ agent, onClose }: { agent: Agent | null; onClo
 
   useEffect(() => {
     if (agent) {
-      if (!initialMessages[agent.id]) {
-        initialMessages[agent.id] = [getInitialMessage(agent)];
+      if (!messageStore[agent.id]) {
+        messageStore[agent.id] = [getInitialMessage(agent)];
       }
-      setMessages(initialMessages[agent.id]);
+      setMessages(messageStore[agent.id]);
     }
   }, [agent]);
 
@@ -41,91 +40,77 @@ export function AgentChatDrawer({ agent, onClose }: { agent: Agent | null; onClo
 
   const send = () => {
     if (!input.trim() || !agent) return;
-    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input, timestamp: "Just now" };
+    const userMsg: Message = { id: Date.now().toString(), role: "user", content: input, timestamp: "now" };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
-    initialMessages[agent.id] = newMessages;
+    messageStore[agent.id] = newMessages;
     setInput("");
 
-    // Simulate response
     setTimeout(() => {
       const reply: Message = {
         id: (Date.now() + 1).toString(),
         role: "agent",
         content: "Understood. I'll look into that and follow up shortly.",
-        timestamp: "Just now",
+        timestamp: "now",
       };
       const updated = [...newMessages, reply];
       setMessages(updated);
-      initialMessages[agent.id] = updated;
-    }, 800);
+      messageStore[agent.id] = updated;
+    }, 600);
   };
 
+  if (!agent) return null;
+
   return (
-    <AnimatePresence>
-      {agent && (
-        <motion.div
-          initial={{ width: 0, opacity: 0 }}
-          animate={{ width: 380, opacity: 1 }}
-          exit={{ width: 0, opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="border-l bg-surface-elevated flex flex-col overflow-hidden shrink-0"
-        >
-          {/* Header */}
-          <div className="h-14 flex items-center justify-between px-4 border-b shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="h-7 w-7 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-display font-bold text-xs">
-                {agent.avatar}
-              </div>
-              <div>
-                <p className="text-sm font-display font-semibold">{agent.name}</p>
-                <p className="text-[11px] text-muted-foreground">{agent.role}</p>
-              </div>
-            </div>
-            <button onClick={onClose} className="p-1 rounded hover:bg-muted transition-colors">
-              <X className="h-4 w-4 text-muted-foreground" />
-            </button>
-          </div>
+    <div className="w-80 border-l flex flex-col shrink-0 bg-background">
+      {/* Header */}
+      <div className="h-10 flex items-center justify-between px-3 border-b shrink-0">
+        <div className="flex items-center gap-2">
+          <Terminal className="h-3 w-3 text-accent" />
+          <span className="text-xs font-medium">{agent.name}</span>
+        </div>
+        <button onClick={onClose} className="p-1 rounded hover:bg-secondary transition-colors">
+          <X className="h-3 w-3 text-muted-foreground" />
+        </button>
+      </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-            {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-foreground"
-                  }`}
-                >
-                  {msg.content}
-                </div>
-              </div>
-            ))}
-            <div ref={bottomRef} />
-          </div>
-
-          {/* Input */}
-          <div className="border-t p-3 shrink-0">
-            <div className="flex items-center gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && send()}
-                placeholder={`Message ${agent.name}...`}
-                className="flex-1 text-sm bg-muted rounded-md px-3 py-2 outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-accent"
-              />
-              <button
-                onClick={send}
-                disabled={!input.trim()}
-                className="p-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-40 transition-opacity"
-              >
-                <Send className="h-3.5 w-3.5" />
-              </button>
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
+        {messages.map((msg) => (
+          <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div
+              className={`max-w-[90%] rounded px-2.5 py-1.5 text-xs ${
+                msg.role === "user"
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-secondary text-foreground"
+              }`}
+            >
+              {msg.content}
             </div>
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Input */}
+      <div className="border-t p-2 shrink-0">
+        <div className="flex items-center gap-1.5">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send()}
+            placeholder={`Command ${agent.name}...`}
+            className="flex-1 text-xs bg-secondary rounded px-2.5 py-1.5 outline-none placeholder:text-muted-foreground focus:ring-1 focus:ring-accent"
+          />
+          <button
+            onClick={send}
+            disabled={!input.trim()}
+            className="p-1.5 rounded bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-30 transition-all"
+          >
+            <Send className="h-3 w-3" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
