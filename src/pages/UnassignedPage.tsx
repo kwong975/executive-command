@@ -1,7 +1,5 @@
-import { AppHeader } from "@/components/AppHeader";
 import { AppLayout } from "@/components/AppLayout";
-import { unassignedThreads, agents } from "@/data/mockData";
-import { motion } from "framer-motion";
+import { unassignedThreads } from "@/data/mockData";
 import { Inbox, UserPlus } from "lucide-react";
 import { useState } from "react";
 
@@ -13,44 +11,40 @@ export default function UnassignedPage() {
   };
 
   return (
-    <AppLayout>
-      <AppHeader title="Unassigned" />
+    <AppLayout title="Unassigned">
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-2xl mx-auto px-6 py-10">
+        <div className="max-w-2xl mx-auto px-5 py-6">
           {threads.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
-              <Inbox className="h-10 w-10 text-muted-foreground/40 mb-3" />
-              <p className="text-sm text-muted-foreground">Nothing falling through the cracks.</p>
+              <Inbox className="h-8 w-8 text-muted-foreground/30 mb-2" />
+              <p className="text-xs text-muted-foreground">Nothing falling through the cracks.</p>
             </div>
           ) : (
             <>
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-4">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
                 {threads.length} items need ownership
               </p>
-              <div className="space-y-2">
-                {threads.map((t, i) => (
-                  <motion.div
+              <div className="space-y-1">
+                {threads.map((t) => (
+                  <div
                     key={t.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    className="rounded-lg border bg-surface-elevated p-4"
+                    className="rounded border bg-surface-elevated py-2.5 px-3"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="font-display font-semibold text-sm">{t.title}</p>
-                        <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{t.summary}</p>
-                        <p className="text-xs text-muted-foreground mt-2">{t.source} · {t.timestamp}</p>
+                        <p className="text-sm">{t.title}</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{t.summary}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{t.source} · {t.timestamp}</p>
                       </div>
                       <button
                         onClick={() => handleAssign(t.id)}
-                        className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-medium hover:bg-muted transition-colors"
+                        className="shrink-0 flex items-center gap-1 px-2 py-1 rounded border text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                       >
                         <UserPlus className="h-3 w-3" />
                         Assign
                       </button>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </>
