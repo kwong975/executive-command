@@ -45,6 +45,21 @@ export interface Agent {
   stalledWork: number;
 }
 
+export interface Artifact {
+  id: string;
+  title: string;
+  source: "email" | "meeting" | "document" | "slack" | "system";
+  timestamp: string;
+  matterId: string;
+}
+
+export interface Person {
+  id: string;
+  name: string;
+  role: "owner" | "participant" | "stakeholder";
+  matterId: string;
+}
+
 export interface Thread {
   id: string;
   title: string;
@@ -77,6 +92,8 @@ export interface Matter {
   goalIds: string[];
   threads: Thread[];
   commitments: Commitment[];
+  artifacts: Artifact[];
+  people: Person[];
   lastActivity: string;
   overdueCount: number;
 }
@@ -99,6 +116,45 @@ export interface DecisionItem {
   agentId: string;
   matterId?: string;
   suggestedAction?: string;
+}
+
+export interface AttentionItem {
+  id: string;
+  title: string;
+  type: "email" | "commitment" | "matter" | "thread" | "system";
+  owner?: string;
+  age: string;
+  urgency: "critical" | "high" | "medium";
+  matterId?: string;
+  agentId?: string;
+  suggestedAction?: string;
+}
+
+export interface Meeting {
+  id: string;
+  time: string;
+  title: string;
+  matterIds: string[];
+  threadIds: string[];
+  participants: string[];
+  overdueParticipants: { name: string; count: number }[];
+}
+
+export interface WaitingItem {
+  id: string;
+  title: string;
+  type: "email" | "delegation" | "matter";
+  waitingSince: string;
+  owner?: string;
+  matterId?: string;
+}
+
+export interface CleanupItem {
+  id: string;
+  title: string;
+  type: "unassigned" | "stale" | "orphan" | "no-owner";
+  age: string;
+  matterId?: string;
 }
 
 // ===== AGENTS =====
@@ -279,6 +335,14 @@ export const matters: Matter[] = [
       { id: "c1", title: "Launch retargeting campaign", owner: "Atlas", dueDate: "Mar 28", status: "done", matterId: "m1" },
       { id: "c2", title: "Deliver Q1 attribution report", owner: "Atlas", dueDate: "Apr 2", status: "on-track", matterId: "m1" },
     ],
+    artifacts: [
+      { id: "ar1", title: "Q1 Campaign Brief", source: "document", timestamp: "2w ago", matterId: "m1" },
+      { id: "ar2", title: "Creative assets review — email", source: "email", timestamp: "3d ago", matterId: "m1" },
+    ],
+    people: [
+      { id: "p1", name: "Atlas", role: "owner", matterId: "m1" },
+      { id: "p2", name: "Marketing Lead", role: "stakeholder", matterId: "m1" },
+    ],
   },
   {
     id: "m2", title: "API v2.3 Release", status: "at-risk", owner: "Rigby", ownerAgentId: "a2",
@@ -293,6 +357,16 @@ export const matters: Matter[] = [
       { id: "c4", title: "Complete auth migration", owner: "Rigby", dueDate: "Mar 30", status: "blocked", matterId: "m2" },
       { id: "c5", title: "API v2.3 full release", owner: "Rigby", dueDate: "Apr 5", status: "at-risk", matterId: "m2" },
     ],
+    artifacts: [
+      { id: "ar3", title: "API v2.3 spec document", source: "document", timestamp: "1w ago", matterId: "m2" },
+      { id: "ar4", title: "Auth provider comparison — meeting", source: "meeting", timestamp: "3d ago", matterId: "m2" },
+      { id: "ar5", title: "Rate limiting PR #481", source: "system", timestamp: "4h ago", matterId: "m2" },
+    ],
+    people: [
+      { id: "p3", name: "Rigby", role: "owner", matterId: "m2" },
+      { id: "p4", name: "CTO", role: "stakeholder", matterId: "m2" },
+      { id: "p5", name: "Security Lead", role: "participant", matterId: "m2" },
+    ],
   },
   {
     id: "m3", title: "Customer Churn Investigation", status: "blocked", owner: "Noor", ownerAgentId: "a5",
@@ -305,6 +379,14 @@ export const matters: Matter[] = [
     commitments: [
       { id: "c6", title: "Deliver churn analysis report", owner: "Noor", dueDate: "Apr 1", status: "blocked", matterId: "m3" },
     ],
+    artifacts: [
+      { id: "ar6", title: "Enterprise exit survey data", source: "document", timestamp: "1w ago", matterId: "m3" },
+      { id: "ar7", title: "Churn report draft — email from VP Sales", source: "email", timestamp: "2d ago", matterId: "m3" },
+    ],
+    people: [
+      { id: "p6", name: "Noor", role: "owner", matterId: "m3" },
+      { id: "p7", name: "VP Sales", role: "stakeholder", matterId: "m3" },
+    ],
   },
   {
     id: "m4", title: "Q1 Ops Review", status: "healthy", owner: "ThuyTM3", ownerAgentId: "a4",
@@ -316,6 +398,13 @@ export const matters: Matter[] = [
     commitments: [
       { id: "c7", title: "Q1 ops summary document", owner: "ThuyTM3", dueDate: "Apr 7", status: "on-track", matterId: "m4" },
     ],
+    artifacts: [
+      { id: "ar8", title: "Q1 review template", source: "document", timestamp: "1w ago", matterId: "m4" },
+    ],
+    people: [
+      { id: "p8", name: "ThuyTM3", role: "owner", matterId: "m4" },
+      { id: "p9", name: "COO", role: "stakeholder", matterId: "m4" },
+    ],
   },
   {
     id: "m5", title: "Zalo Pay Integration", status: "stale", owner: "Rigby", ownerAgentId: "a2",
@@ -324,6 +413,10 @@ export const matters: Matter[] = [
     threads: [],
     commitments: [
       { id: "c8", title: "Complete sandbox testing", owner: "Rigby", dueDate: "Mar 15", status: "overdue", matterId: "m5" },
+    ],
+    artifacts: [],
+    people: [
+      { id: "p10", name: "Rigby", role: "owner", matterId: "m5" },
     ],
   },
   {
@@ -335,6 +428,13 @@ export const matters: Matter[] = [
     ],
     commitments: [
       { id: "c9", title: "Achieve 99.9% uptime Q1", owner: "Syssie", dueDate: "Mar 31", status: "on-track", matterId: "m6" },
+    ],
+    artifacts: [
+      { id: "ar9", title: "Uptime dashboard snapshot", source: "system", timestamp: "1h ago", matterId: "m6" },
+    ],
+    people: [
+      { id: "p11", name: "Syssie", role: "owner", matterId: "m6" },
+      { id: "p12", name: "Platform Team", role: "participant", matterId: "m6" },
     ],
   },
 ];
@@ -368,6 +468,53 @@ export const decisions: DecisionItem[] = [
   { id: "d1", title: "Auth migration: proceed or rollback?", context: "Rigby's migration hit breaking changes. Risks API v2.3 deadline.", urgency: "critical", source: "API v2.3 Release", agentId: "a2", matterId: "m2", suggestedAction: "Assign to Rigby" },
   { id: "d2", title: "Upgrade Zendesk API to unblock Noor", context: "Rate limited on current plan. ~$200/mo upgrade unblocks churn investigation.", urgency: "important", source: "Churn Investigation", agentId: "a5", matterId: "m3", suggestedAction: "Approve upgrade" },
   { id: "d3", title: "Assign APAC support spike", context: "3x volume increase, no owner, no incident. Needs triage.", urgency: "important", source: "Unassigned", agentId: "a3", suggestedAction: "Assign to Syssie" },
+];
+
+// ===== TODAY - ATTENTION ITEMS =====
+
+export const attentionItems: AttentionItem[] = [
+  { id: "att1", title: "Auth migration: proceed or rollback?", type: "matter", urgency: "critical", age: "2d", owner: "Rigby", matterId: "m2", agentId: "a2", suggestedAction: "Decide" },
+  { id: "att2", title: "VP Sales escalation — churn report overdue", type: "email", urgency: "critical", age: "4h", matterId: "m3", suggestedAction: "Respond" },
+  { id: "att3", title: "Zendesk API rate limited — Noor blocked", type: "system", urgency: "high", age: "2h", agentId: "a5", matterId: "m3", suggestedAction: "Approve upgrade" },
+  { id: "att4", title: "Billing dispute — Acme Corp $12K", type: "thread", urgency: "high", age: "3d", suggestedAction: "Assign owner" },
+  { id: "att5", title: "Complete sandbox testing — overdue 15d", type: "commitment", urgency: "medium", age: "15d", owner: "Rigby", matterId: "m5", suggestedAction: "Reassign" },
+  { id: "att6", title: "APAC support spike (3x) — no owner", type: "thread", urgency: "high", age: "6h", agentId: "a3", suggestedAction: "Assign to Syssie" },
+];
+
+// ===== TODAY - MEETINGS =====
+
+export const meetings: Meeting[] = [
+  {
+    id: "mt1", time: "09:00", title: "Morning Standup",
+    matterIds: ["m2", "m3"], threadIds: ["t3", "t5"],
+    participants: ["Atlas", "Rigby", "Noor"],
+    overdueParticipants: [{ name: "Rigby", count: 1 }],
+  },
+  {
+    id: "mt2", time: "14:00", title: "Strategy Review — ZP",
+    matterIds: ["m3", "m5"], threadIds: [],
+    participants: ["Atlas", "Noor", "VP Sales"],
+    overdueParticipants: [{ name: "Noor", count: 1 }],
+  },
+];
+
+// ===== TODAY - WAITING =====
+
+export const waitingItems: WaitingItem[] = [
+  { id: "w1", title: "Reply from VP Sales on churn priorities", type: "email", waitingSince: "2d", owner: "VP Sales", matterId: "m3" },
+  { id: "w2", title: "Rigby: auth provider decision", type: "delegation", waitingSince: "2d", owner: "Rigby", matterId: "m2" },
+  { id: "w3", title: "Zalo Pay sandbox — no update", type: "matter", waitingSince: "12d", owner: "Rigby", matterId: "m5" },
+];
+
+// ===== TODAY - CLEANUP =====
+
+export const cleanupItems: CleanupItem[] = [
+  { id: "cl1", title: "APAC support ticket spike (3x)", type: "unassigned", age: "6h" },
+  { id: "cl2", title: "Competitor free tier assessment", type: "unassigned", age: "1d" },
+  { id: "cl3", title: "Slack integration request ×3", type: "unassigned", age: "2d" },
+  { id: "cl4", title: "Zalo Pay Integration", type: "stale", age: "12d", matterId: "m5" },
+  { id: "cl5", title: "GN mobile crash reports", type: "unassigned", age: "4h" },
+  { id: "cl6", title: "Billing dispute — Acme Corp $12K", type: "no-owner", age: "3d" },
 ];
 
 // ===== SYSTEM HEALTH =====
