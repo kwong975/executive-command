@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { type Agent } from "@/data/mockData";
-import { X, Send, Terminal, Zap } from "lucide-react";
+import { X, Send, Terminal, Zap, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 
 interface Message {
   id: string;
-  role: "user" | "agent";
+  role: "user" | "agent" | "system";
   content: string;
+  action?: { label: string; status: "pending" | "confirmed" | "done" | "failed" };
 }
 
 const store: Record<string, Message[]> = {};
@@ -15,6 +16,8 @@ const quickCommands = [
   "assign to ThuyTM3",
   "fix failed cron",
   "run diagnostics",
+  "merge matters",
+  "summarize status",
 ];
 
 export function CommandDrawer({ agent, onClose }: { agent: Agent | null; onClose: () => void }) {
@@ -43,18 +46,55 @@ export function CommandDrawer({ agent, onClose }: { agent: Agent | null; onClose
     setMessages(next);
     store[agent.id] = next;
     setInput("");
-    setTimeout(() => {
-      const reply: Message = { id: (Date.now() + 1).toString(), role: "agent", content: "Understood. Acting on that now." };
-      const updated = [...next, reply];
-      setMessages(updated);
-      store[agent.id] = updated;
-    }, 500);
+
+    // Simulate action preview
+    const isAction = msg.startsWith("assign") || msg.startsWith("fix") || msg.startsWith("merge") || msg.startsWith("run");
+    if (isAction) {
+      setTimeout(() => {
+        const preview: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "system",
+          content: `Proposed: ${msg}`,
+          action: { label: "Confirm", status: "pending" },
+        };
+        const updated = [...next, preview];
+        setMessages(updated);
+        store[agent.id] = updated;
+      }, 300);
+    } else {
+      setTimeout(() => {
+        const reply: Message = { id: (Date.now() + 1).toString(), role: "agent", content: "Understood. Acting on that now." };
+        const updated = [...next, reply];
+        setMessages(updated);
+        store[agent.id] = updated;
+      }, 400);
+    }
+  };
+
+  const confirmAction = (msgId: string) => {
+    setMessages(prev => {
+      const updated = prev.map(m => {
+        if (m.id === msgId && m.action) {
+          return { ...m, action: { ...m.action, status: "done" as const } };
+        }
+        return m;
+      });
+      const result: Message = {
+        id: (Date.now() + 2).toString(),
+        role: "system",
+        content: "✓ Action completed successfully.",
+      };
+      const final = [...updated, result];
+      if (agent) store[agent.id] = final;
+      return final;
+    });
   };
 
   if (!agent) return null;
 
   return (
-    <div className="w-64 border-l flex flex-col shrink-0 bg-background">
+    <div className="w-60 border-l flex flex-col shrink-0 bg-background">
+      {/* Header */}
       <div className="h-7 flex items-center justify-between px-2 border-b shrink-0">
         <div className="flex items-center gap-1.5">
           <Terminal className="h-2.5 w-2.5 text-accent" />
@@ -66,14 +106,35 @@ export function CommandDrawer({ agent, onClose }: { agent: Agent | null; onClose
         </button>
       </div>
 
+      {/* Messages */}
       <div className="flex-1 overflow-y-auto px-2 py-1.5 space-y-1">
         {messages.map(msg => (
-          <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[90%] rounded px-1.5 py-1 text-[10px] leading-relaxed ${
-              msg.role === "user" ? "bg-accent text-accent-foreground" : "bg-secondary text-foreground"
-            }`}>
-              {msg.content}
-            </div>
+          <div key={msg.id}>
+            {msg.role === "system" ? (
+              <div className="bg-secondary/60 rounded px-1.5 py-1 text-[10px] leading-relaxed border border-border/30">
+                <div className="flex items-center gap-1">
+                  {msg.action?.status === "pending" && <AlertTriangle className="h-2.5 w-2.5 text-warning shrink-0" />}
+                  {msg.action?.status === "done" && <CheckCircle className="h-2.5 w-2.5 text-success shrink-0" />}
+                  <span>{msg.content}</span>
+                </div>
+                {msg.action?.status === "pending" && (
+                  <button
+                    onClick={() => confirmAction(msg.id)}
+                    className="mt-1 text-[9px] px-1.5 py-0.5 rounded bg-accent text-accent-foreground hover:bg-accent/90 flex items-center gap-0.5"
+                  >
+                    <Zap className="h-2 w-2" />Confirm
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[90%] rounded px-1.5 py-1 text-[10px] leading-relaxed ${
+                  msg.role === "user" ? "bg-accent text-accent-foreground" : "bg-secondary text-foreground"
+                }`}>
+                  {msg.content}
+                </div>
+              </div>
+            )}
           </div>
         ))}
         <div ref={endRef} />
@@ -88,6 +149,7 @@ export function CommandDrawer({ agent, onClose }: { agent: Agent | null; onClose
         ))}
       </div>
 
+      {/* Input */}
       <div className="border-t p-1.5 shrink-0">
         <div className="flex items-center gap-1">
           <input
