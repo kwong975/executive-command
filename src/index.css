@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -11,22 +11,22 @@
     --font-mono: 'JetBrains Mono', monospace;
 
     --background: 225 15% 7%;
-    --foreground: 220 10% 88%;
+    --foreground: 220 10% 90%;
 
-    --card: 225 14% 9%;
-    --card-foreground: 220 10% 88%;
+    --card: 225 14% 9.5%;
+    --card-foreground: 220 10% 90%;
 
-    --popover: 225 14% 10%;
-    --popover-foreground: 220 10% 88%;
+    --popover: 225 14% 11%;
+    --popover-foreground: 220 10% 90%;
 
-    --primary: 220 10% 88%;
+    --primary: 220 10% 90%;
     --primary-foreground: 225 15% 7%;
 
-    --secondary: 225 12% 12%;
-    --secondary-foreground: 220 10% 65%;
+    --secondary: 225 12% 13%;
+    --secondary-foreground: 220 10% 68%;
 
-    --muted: 225 12% 12%;
-    --muted-foreground: 220 8% 42%;
+    --muted: 225 12% 13%;
+    --muted-foreground: 220 8% 46%;
 
     --accent: 168 55% 42%;
     --accent-foreground: 225 15% 7%;
@@ -37,26 +37,26 @@
     --warning: 38 85% 50%;
     --warning-foreground: 30 80% 12%;
 
-    --success: 145 55% 40%;
+    --success: 145 55% 42%;
     --success-foreground: 0 0% 100%;
 
-    --surface-elevated: 225 14% 9%;
+    --surface-elevated: 225 14% 10%;
 
-    --border: 225 12% 14%;
-    --input: 225 12% 14%;
+    --border: 225 12% 15%;
+    --input: 225 12% 15%;
     --ring: 168 55% 42%;
 
-    --radius: 0.25rem;
+    --radius: 0.375rem;
 
-    --sidebar-background: 225 15% 5%;
-    --sidebar-foreground: 220 8% 42%;
-    --sidebar-primary: 220 10% 88%;
+    --sidebar-background: 225 15% 5.5%;
+    --sidebar-foreground: 220 8% 44%;
+    --sidebar-primary: 220 10% 90%;
     --sidebar-primary-foreground: 225 15% 7%;
-    --sidebar-accent: 225 12% 12%;
-    --sidebar-accent-foreground: 220 10% 82%;
-    --sidebar-border: 225 12% 12%;
+    --sidebar-accent: 225 12% 13%;
+    --sidebar-accent-foreground: 220 10% 85%;
+    --sidebar-border: 225 12% 13%;
     --sidebar-ring: 168 55% 42%;
-    --sidebar-muted: 220 8% 35%;
+    --sidebar-muted: 220 8% 38%;
   }
 }
 
@@ -69,29 +69,35 @@
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
   }
 
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
     background: hsl(225 12% 18%);
-    border-radius: 2px;
+    border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(225 12% 24%);
+  }
+
+  /* Selection */
+  ::selection {
+    background: hsl(168 55% 42% / 0.25);
   }
 }
 

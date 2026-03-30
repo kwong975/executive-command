@@ -10,7 +10,7 @@ const dotColor: Record<string, string> = {
   active: "bg-success",
   ok: "bg-success",
   "on-track": "bg-success",
-  done: "bg-muted-foreground",
+  done: "bg-muted-foreground/50",
   blocked: "bg-destructive",
   error: "bg-destructive",
   failed: "bg-destructive",
@@ -18,47 +18,58 @@ const dotColor: Record<string, string> = {
   "at-risk": "bg-warning",
   warning: "bg-warning",
   degraded: "bg-warning",
-  idle: "bg-muted-foreground",
-  stale: "bg-muted-foreground",
-  paused: "bg-muted-foreground",
-  disabled: "bg-muted-foreground",
+  idle: "bg-muted-foreground/50",
+  stale: "bg-muted-foreground/40",
+  paused: "bg-muted-foreground/50",
+  disabled: "bg-muted-foreground/40",
   open: "bg-accent",
   pending: "bg-warning",
-  resolved: "bg-muted-foreground",
+  resolved: "bg-muted-foreground/40",
 };
 
-export function StatusDot({ status, size = "sm" }: { status: string; size?: "sm" | "md" }) {
-  const s = size === "md" ? "h-2.5 w-2.5" : "h-2 w-2";
-  return <div className={cn("rounded-full shrink-0", s, dotColor[status] || "bg-muted-foreground")} />;
+export function StatusDot({ status, size = "sm", pulse }: { status: string; size?: "sm" | "md"; pulse?: boolean }) {
+  const s = size === "md" ? "h-2.5 w-2.5" : "h-[7px] w-[7px]";
+  const isError = ["blocked", "error", "failed", "destructive"].includes(status);
+  return (
+    <div className={cn(
+      "rounded-full shrink-0",
+      s,
+      dotColor[status] || "bg-muted-foreground/40",
+      (pulse || isError) && "animate-pulse"
+    )} />
+  );
 }
 
 // ===== STATUS PILL =====
 const pillColor: Record<string, string> = {
-  healthy: "bg-success/10 text-success",
-  active: "bg-success/10 text-success",
-  ok: "bg-success/10 text-success",
-  "on-track": "bg-success/10 text-success",
-  done: "bg-muted text-muted-foreground",
-  blocked: "bg-destructive/10 text-destructive",
-  error: "bg-destructive/10 text-destructive",
-  failed: "bg-destructive/10 text-destructive",
-  overdue: "bg-destructive/10 text-destructive",
-  "at-risk": "bg-warning/10 text-warning",
-  warning: "bg-warning/10 text-warning",
-  degraded: "bg-warning/10 text-warning",
-  idle: "bg-muted text-muted-foreground",
-  stale: "bg-muted text-muted-foreground",
-  paused: "bg-muted text-muted-foreground",
-  disabled: "bg-muted text-muted-foreground",
-  open: "bg-accent/10 text-accent",
-  pending: "bg-warning/10 text-warning",
-  resolved: "bg-muted text-muted-foreground",
+  healthy: "bg-success/10 text-success border-success/20",
+  active: "bg-success/10 text-success border-success/20",
+  ok: "bg-success/10 text-success border-success/20",
+  "on-track": "bg-success/10 text-success border-success/20",
+  done: "bg-muted/60 text-muted-foreground border-border/30",
+  blocked: "bg-destructive/10 text-destructive border-destructive/20",
+  error: "bg-destructive/10 text-destructive border-destructive/20",
+  failed: "bg-destructive/10 text-destructive border-destructive/20",
+  overdue: "bg-destructive/10 text-destructive border-destructive/20",
+  "at-risk": "bg-warning/10 text-warning border-warning/20",
+  warning: "bg-warning/10 text-warning border-warning/20",
+  degraded: "bg-warning/10 text-warning border-warning/20",
+  idle: "bg-muted/60 text-muted-foreground border-border/30",
+  stale: "bg-muted/60 text-muted-foreground border-border/30",
+  paused: "bg-muted/60 text-muted-foreground border-border/30",
+  disabled: "bg-muted/60 text-muted-foreground border-border/30",
+  open: "bg-accent/10 text-accent border-accent/20",
+  pending: "bg-warning/10 text-warning border-warning/20",
+  resolved: "bg-muted/60 text-muted-foreground border-border/30",
 };
 
 export function StatusPill({ status }: { status: string }) {
   return (
-    <span className={cn("text-[11px] px-2 py-0.5 rounded font-medium leading-none", pillColor[status] || "bg-muted text-muted-foreground")}>
-      {status}
+    <span className={cn(
+      "text-[11px] px-2 py-0.5 rounded-md font-medium leading-none border capitalize",
+      pillColor[status] || "bg-muted/60 text-muted-foreground border-border/30"
+    )}>
+      {status.replace("-", " ")}
     </span>
   );
 }
@@ -70,16 +81,21 @@ export function SectionLabel({ children, count, accent }: {
   accent?: "destructive" | "warning";
 }) {
   return (
-    <div className="flex items-center gap-2 mb-1.5 px-2.5">
+    <div className="flex items-center gap-2.5 mb-2 px-3">
       <span className={cn(
-        "text-[12px] font-semibold uppercase tracking-wider",
+        "text-[11px] font-semibold uppercase tracking-[0.08em]",
         accent === "destructive" ? "text-destructive" :
         accent === "warning" ? "text-warning" : "text-muted-foreground"
       )}>
         {children}
       </span>
       {count !== undefined && (
-        <span className="text-[12px] font-mono text-muted-foreground">{count}</span>
+        <span className={cn(
+          "text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
+          accent === "destructive" ? "bg-destructive/10 text-destructive" :
+          accent === "warning" ? "bg-warning/10 text-warning" :
+          "bg-secondary text-muted-foreground"
+        )}>{count}</span>
       )}
     </div>
   );
@@ -92,16 +108,21 @@ export function GroupHeader({ label, count, open, onToggle, accent }: {
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center gap-2 px-3 py-2 text-left border-b border-border/30 hover:bg-secondary/30 transition-colors sticky top-0 bg-background z-10"
+      className="w-full flex items-center gap-2 px-3 py-2.5 text-left border-b border-border/20 hover:bg-secondary/40 transition-colors sticky top-0 bg-background/95 backdrop-blur-sm z-10"
     >
-      <ChevronRight className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-90")} />
+      <ChevronRight className={cn("h-3 w-3 text-muted-foreground transition-transform duration-150", open && "rotate-90")} />
       <span className={cn(
-        "text-[12px] font-semibold uppercase tracking-wider",
+        "text-[11px] font-semibold uppercase tracking-[0.08em]",
         accent === "destructive" ? "text-destructive" : accent === "warning" ? "text-warning" : "text-muted-foreground"
       )}>
         {label}
       </span>
-      <span className="text-[12px] font-mono text-muted-foreground">{count}</span>
+      <span className={cn(
+        "text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
+        accent === "destructive" ? "bg-destructive/10 text-destructive" :
+        accent === "warning" ? "bg-warning/10 text-warning" :
+        "bg-secondary text-muted-foreground"
+      )}>{count}</span>
     </button>
   );
 }
@@ -119,12 +140,12 @@ export function InlineAction({ icon, label, accent, destructive, onClick, classN
     <button
       onClick={onClick}
       className={cn(
-        "text-[12px] px-2 py-1 rounded flex items-center gap-1.5 transition-colors font-medium",
+        "text-[11px] px-2 py-1 rounded-md flex items-center gap-1 transition-all duration-150 font-medium",
         accent
-          ? "bg-accent text-accent-foreground hover:bg-accent/90"
+          ? "bg-accent/90 text-accent-foreground hover:bg-accent shadow-sm shadow-accent/10"
           : destructive
           ? "hover:bg-destructive/15 text-muted-foreground hover:text-destructive"
-          : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80",
+          : "bg-secondary/80 text-muted-foreground hover:text-foreground hover:bg-secondary",
         cls
       )}
     >
@@ -147,8 +168,8 @@ export function DenseRow({ children, selected, onClick, className: cls, urgencyB
     <div
       onClick={onClick}
       className={cn(
-        "flex items-center justify-between px-3 py-2 group transition-colors border-b border-border/15",
-        selected ? "bg-secondary" : "hover:bg-secondary/40",
+        "flex items-center justify-between px-3 py-[7px] group transition-all duration-100 border-b border-border/10",
+        selected ? "bg-secondary/80 shadow-inner" : "hover:bg-secondary/30",
         onClick && "cursor-pointer",
         borderCls,
         cls
@@ -165,12 +186,12 @@ export function Signal({ type, text, action }: { type: "ok" | "warn" | "error"; 
     type === "error" ? <AlertTriangle className="h-3.5 w-3.5 text-destructive" /> :
     <AlertTriangle className="h-3.5 w-3.5 text-warning" />;
   return (
-    <div className="flex items-center justify-between py-1.5 group">
-      <div className="flex items-center gap-2">
+    <div className="flex items-center justify-between py-2 group">
+      <div className="flex items-center gap-2.5">
         {icon}
         <span className={cn(
-          "text-sm",
-          type === "error" ? "text-destructive" : type === "warn" ? "text-warning" : "text-success"
+          "text-[13px]",
+          type === "error" ? "text-destructive" : type === "warn" ? "text-warning" : "text-muted-foreground"
         )}>{text}</span>
       </div>
       {action && (
@@ -182,10 +203,61 @@ export function Signal({ type, text, action }: { type: "ok" | "warn" | "error"; 
 
 // ===== COLUMN LABEL =====
 export function ColLabel({ children }: { children: React.ReactNode }) {
-  return <div className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">{children}</div>;
+  return <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em] mb-2">{children}</div>;
 }
 
 // ===== LABEL =====
 export function Label({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("text-[12px] font-semibold uppercase tracking-wider mb-1.5", className || "text-muted-foreground")}>{children}</div>;
+  return <div className={cn("text-[11px] font-semibold uppercase tracking-[0.08em] mb-2", className || "text-muted-foreground")}>{children}</div>;
+}
+
+// ===== PANEL HEADER =====
+export function PanelHeader({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn("h-11 border-b border-border/30 px-4 flex items-center justify-between shrink-0", className)}>
+      {children}
+    </div>
+  );
+}
+
+// ===== TAB BAR =====
+export function TabBar({ tabs, active, onChange }: {
+  tabs: { id: string; label: string; count?: number; alert?: boolean }[];
+  active: string;
+  onChange: (id: string) => void;
+}) {
+  return (
+    <div className="border-b border-border/30 px-4 flex items-center shrink-0">
+      {tabs.map(t => (
+        <button
+          key={t.id}
+          onClick={() => onChange(t.id)}
+          className={cn(
+            "px-3 py-2 text-[13px] font-medium border-b-2 transition-colors relative",
+            active === t.id
+              ? "border-accent text-foreground"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {t.label}
+          {t.count !== undefined && (
+            <span className="ml-1.5 text-[10px] font-mono tabular-nums text-muted-foreground">{t.count}</span>
+          )}
+          {t.alert && (
+            <span className="ml-1 text-[10px] text-destructive font-bold">!</span>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ===== EMPTY STATE =====
+export function EmptyState({ text, icon }: { text: string; icon?: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2 text-[13px] text-muted-foreground py-3 px-3">
+      {icon}
+      <span>{text}</span>
+    </div>
+  );
 }

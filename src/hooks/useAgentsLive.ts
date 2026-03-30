@@ -22,7 +22,7 @@ export function useAgentsLive() {
   });
 
   const agents: Agent[] = (agentsQuery.data?.agents || []).map(a =>
-    adaptAgent(a as Record<string, unknown>, (cronsQuery.data?.crons || []) as Record<string, unknown>[])
+    adaptAgent(a as unknown as Record<string, unknown>, (cronsQuery.data?.crons || []) as unknown as Record<string, unknown>[])
   );
 
   return {
