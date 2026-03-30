@@ -28,7 +28,7 @@ export interface Commitment {
   title: string;
   owner: string;
   dueDate: string;
-  status: "on-track" | "overdue" | "done" | "blocked";
+  status: "on-track" | "overdue" | "done" | "blocked" | "at-risk";
   matterId: string;
 }
 
