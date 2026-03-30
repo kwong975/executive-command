@@ -17,8 +17,8 @@ export default function AgentsPage() {
   if (isLoading) {
     return (
       <AppLayout title="Agents">
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin mr-2" /><span className="text-[13px]">Loading agents...</span>
+        <div className="flex items-center justify-center h-full text-muted-foreground gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" /><span className="text-[13px]">Loading agents...</span>
         </div>
       </AppLayout>
     );
@@ -28,23 +28,25 @@ export default function AgentsPage() {
     <AppLayout title="Agents">
       <div className="flex flex-1 overflow-hidden">
         {/* Agent list */}
-        <div className="w-52 border-r flex flex-col shrink-0 overflow-y-auto">
+        <div className="w-56 border-r border-border/30 flex flex-col shrink-0 overflow-y-auto">
           <div className="py-1">
             {agents.map((a) => (
               <button
                 key={a.id}
                 onClick={() => setSelectedId(a.id)}
-                className={`w-full text-left px-3 py-2 flex items-center gap-2.5 transition-colors ${
-                  selected?.id === a.id ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/40"
+                className={`w-full text-left px-3.5 py-2.5 flex items-center gap-2.5 transition-all duration-100 border-l-2 ${
+                  selected?.id === a.id
+                    ? "bg-secondary/80 text-foreground border-l-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/30 border-l-transparent"
                 }`}
               >
                 <StatusDot status={a.status} />
-                <div className="min-w-0">
-                  <div className="text-sm font-medium truncate">{a.name}</div>
-                  <div className="text-[12px] text-muted-foreground truncate">{a.role}</div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[13px] font-medium truncate">{a.name}</div>
+                  <div className="text-[11px] text-muted-foreground truncate">{a.role}</div>
                 </div>
                 {a.failedLast24h > 0 && (
-                  <span className="text-[10px] px-1 py-0.5 rounded bg-destructive/15 text-destructive font-medium shrink-0">{a.failedLast24h}</span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-destructive/15 text-destructive font-semibold shrink-0 tabular-nums">{a.failedLast24h}</span>
                 )}
               </button>
             ))}
@@ -54,7 +56,7 @@ export default function AgentsPage() {
         {selected ? (
           <AgentDetailView agent={selected} onOpenChat={() => setChatAgent(selected)} />
         ) : (
-          <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">No agents found</div>
+          <div className="flex-1 flex items-center justify-center text-[13px] text-muted-foreground">No agents found</div>
         )}
         <CommandDrawer agent={chatAgent} onClose={() => setChatAgent(null)} />
       </div>

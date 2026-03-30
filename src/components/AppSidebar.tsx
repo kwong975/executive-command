@@ -24,9 +24,9 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
-      <SidebarContent className="pt-4">
-        <div className={`px-3 mb-5 ${collapsed ? "px-2 text-center" : ""}`}>
-          <span className={`font-mono font-semibold tracking-widest text-sidebar-primary ${collapsed ? "text-[11px]" : "text-[13px]"}`}>
+      <SidebarContent className="pt-5">
+        <div className={`px-3 mb-6 ${collapsed ? "px-2 text-center" : ""}`}>
+          <span className={`font-mono font-semibold tracking-[0.15em] text-sidebar-primary ${collapsed ? "text-[11px]" : "text-[11px]"}`}>
             {collapsed ? "AC" : "AGENT COMMAND"}
           </span>
         </div>
@@ -39,11 +39,11 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="flex items-center gap-3 px-3 rounded text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-colors text-sm"
+                      className="flex items-center gap-3 px-3 rounded-md text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-all duration-100 text-[13px]"
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
                     >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span>{item.title}</span>}
+                      <item.icon className="h-[15px] w-[15px] shrink-0" />
+                      {!collapsed && <span className="font-medium">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
