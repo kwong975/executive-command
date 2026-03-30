@@ -3,104 +3,82 @@ import { decisions, agents, matters } from "@/data/mockData";
 import { AlertTriangle, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const urgencyStyles = {
-  critical: "border-l-destructive",
-  important: "border-l-warning",
-  normal: "border-l-border",
-};
-
 export default function TodayPage() {
   const navigate = useNavigate();
   const blockedMatters = matters.filter((m) => m.status === "blocked" || m.status === "at-risk");
-  const agentWithError = agents.find((a) => a.status === "error");
+  const errorAgent = agents.find((a) => a.status === "error");
 
   return (
     <AppLayout title="Today">
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-2xl mx-auto px-5 py-6 space-y-6">
+        <div className="max-w-2xl mx-auto px-4 py-4 space-y-4">
+          {/* Decisions */}
           <section>
-            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
-              Needs Your Decision
-            </h3>
-            <div className="space-y-1">
-              {decisions.map((d) => (
-                <div
-                  key={d.id}
-                  className={`border-l-2 rounded pl-3 pr-3 py-2.5 bg-surface-elevated border cursor-pointer hover:bg-secondary/50 transition-colors ${urgencyStyles[d.urgency]}`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium">{d.title}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{d.context}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {agents.find(a => a.id === d.agentId)?.name} · {d.source}
-                      </p>
-                    </div>
-                    {d.urgency === "critical" && (
-                      <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                    )}
+            <SectionLabel>Needs Your Decision</SectionLabel>
+            {decisions.map((d) => (
+              <div
+                key={d.id}
+                className={`flex items-start gap-2 py-2 border-b border-border/40 last:border-0 cursor-pointer hover:bg-secondary/30 -mx-1 px-1 rounded transition-colors ${
+                  d.urgency === "critical" ? "border-l-2 border-l-destructive pl-2" : ""
+                }`}
+              >
+                {d.urgency === "critical" && <AlertTriangle className="h-3 w-3 text-destructive shrink-0 mt-0.5" />}
+                <div className="min-w-0 flex-1">
+                  <div className="text-[11px] font-medium">{d.title}</div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5">{d.context}</div>
+                  <div className="text-[10px] text-muted-foreground mt-0.5">
+                    {agents.find(a => a.id === d.agentId)?.name} · {d.source}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </section>
 
-          {blockedMatters.length > 0 && (
+          {/* Execution risk */}
+          {(blockedMatters.length > 0 || errorAgent) && (
             <section>
-              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
-                Blocked & At Risk
-              </h3>
-              <div className="space-y-1">
-                {blockedMatters.map((m) => (
-                  <div
-                    key={m.id}
-                    onClick={() => navigate("/matters")}
-                    className="flex items-center justify-between py-2 px-3 rounded bg-surface-elevated border hover:bg-secondary/50 cursor-pointer transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className={`h-1.5 w-1.5 rounded-full ${m.status === "blocked" ? "bg-destructive" : "bg-warning"}`} />
-                      <div>
-                        <p className="text-sm">{m.title}</p>
-                        <p className="text-xs text-muted-foreground">{m.owner} · {m.lastActivity}</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
+              <SectionLabel>Execution Risk</SectionLabel>
+              {blockedMatters.map((m) => (
+                <div
+                  key={m.id}
+                  onClick={() => navigate("/matters")}
+                  className="flex items-center justify-between py-1.5 cursor-pointer hover:bg-secondary/30 -mx-1 px-1 rounded transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className={`h-1.5 w-1.5 rounded-full ${m.status === "blocked" ? "bg-destructive" : "bg-warning"}`} />
+                    <span className="text-[11px]">{m.title}</span>
+                    <span className="text-[10px] text-muted-foreground">{m.owner}</span>
                   </div>
-                ))}
-              </div>
+                  <ArrowRight className="h-2.5 w-2.5 text-muted-foreground" />
+                </div>
+              ))}
+              {errorAgent && (
+                <div
+                  onClick={() => navigate("/agents")}
+                  className="flex items-center gap-2 py-1.5 cursor-pointer hover:bg-secondary/30 -mx-1 px-1 rounded transition-colors"
+                >
+                  <div className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                  <span className="text-[11px]">{errorAgent.name} — {errorAgent.currentTask}</span>
+                </div>
+              )}
             </section>
           )}
 
-          {agentWithError && (
-            <section>
-              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
-                Agent Alert
-              </h3>
-              <div
-                onClick={() => navigate("/agents")}
-                className="flex items-center gap-2.5 py-2 px-3 rounded bg-destructive/5 border border-destructive/20 cursor-pointer hover:bg-destructive/10 transition-colors"
-              >
-                <div className="h-6 w-6 rounded bg-destructive/10 flex items-center justify-center text-[10px] font-mono font-semibold text-destructive">
-                  {agentWithError.avatar}
-                </div>
-                <div>
-                  <p className="text-sm">{agentWithError.name} is blocked</p>
-                  <p className="text-xs text-muted-foreground">{agentWithError.currentTask}</p>
-                </div>
-              </div>
-            </section>
-          )}
-
+          {/* Quick read */}
           <section>
-            <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">Signals</h3>
-            <div className="flex gap-4 text-sm">
+            <SectionLabel>Status</SectionLabel>
+            <div className="flex gap-6 text-[11px]">
               <div>
-                <span className="text-muted-foreground text-xs">Active matters</span>
-                <p className="text-lg font-semibold">{matters.length}</p>
+                <span className="text-muted-foreground text-[10px] block">Matters</span>
+                <span className="font-semibold">{matters.length} active</span>
               </div>
               <div>
-                <span className="text-muted-foreground text-xs">Agents online</span>
-                <p className="text-lg font-semibold">{agents.filter(a => a.status !== "error").length}/{agents.length}</p>
+                <span className="text-muted-foreground text-[10px] block">Agents</span>
+                <span className="font-semibold">{agents.filter(a => a.status !== "error").length}/{agents.length} online</span>
+              </div>
+              <div>
+                <span className="text-muted-foreground text-[10px] block">Blocked</span>
+                <span className="font-semibold text-destructive">{blockedMatters.filter(m => m.status === "blocked").length}</span>
               </div>
             </div>
           </section>
@@ -108,4 +86,8 @@ export default function TodayPage() {
       </main>
     </AppLayout>
   );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5">{children}</div>;
 }
