@@ -1,60 +1,64 @@
 import { useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { systemHealth } from "@/data/mockData";
-import { motion, AnimatePresence } from "framer-motion";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { X, MessageSquare } from "lucide-react";
 
-const statusColor = {
-  green: "bg-success",
-  yellow: "bg-warning",
-  red: "bg-destructive",
-};
+const sevColor = { ok: "text-success", warning: "text-warning", error: "text-destructive" };
+const healthDot = { green: "bg-success", yellow: "bg-warning", red: "bg-destructive" };
 
-const detailStatusColor = {
-  ok: "bg-success",
-  warning: "bg-warning",
-  error: "bg-destructive",
-};
-
-export function AppHeader({ title }: { title: string }) {
-  const [showHealth, setShowHealth] = useState(false);
+export function AppHeader({ title }: { title?: string }) {
+  const [showSyssie, setShowSyssie] = useState(false);
 
   return (
-    <header className="h-14 flex items-center justify-between border-b px-4 bg-surface-elevated relative">
-      <div className="flex items-center gap-3">
-        <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
-        <h2 className="font-display text-lg font-semibold tracking-tight">{title}</h2>
-      </div>
-
-      <div className="relative">
+    <>
+      <div className="h-8 border-b flex items-center justify-between px-2.5 shrink-0">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+          {title && <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{title}</span>}
+        </div>
         <button
-          onClick={() => setShowHealth(!showHealth)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-muted transition-colors"
+          onClick={() => setShowSyssie(!showSyssie)}
+          className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-secondary transition-colors"
         >
-          <div className={`h-2 w-2 rounded-full ${statusColor[systemHealth.overall]}`} />
-          <span className="text-xs text-muted-foreground font-medium">System</span>
+          <div className={`h-1.5 w-1.5 rounded-full ${healthDot[systemHealth.overall]}`} />
+          <span className="text-[10px] text-muted-foreground font-mono">SYS</span>
         </button>
-
-        <AnimatePresence>
-          {showHealth && (
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              className="absolute right-0 top-full mt-2 w-72 bg-surface-elevated border rounded-lg shadow-lg p-4 z-50"
-            >
-              <p className="text-xs font-medium text-muted-foreground mb-3 uppercase tracking-wider">System Health</p>
-              <div className="space-y-2.5">
-                {systemHealth.details.map((d, i) => (
-                  <div key={i} className="flex items-center gap-2.5">
-                    <div className={`h-1.5 w-1.5 rounded-full ${detailStatusColor[d.status]} shrink-0`} />
-                    <span className="text-sm text-foreground">{d.label}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </header>
+
+      {showSyssie && (
+        <div className="fixed inset-0 z-50 flex justify-end" onClick={() => setShowSyssie(false)}>
+          <div className="w-80 bg-background border-l h-full flex flex-col" onClick={(e) => e.stopPropagation()}>
+            <div className="h-8 flex items-center justify-between px-3 border-b shrink-0">
+              <div className="flex items-center gap-1.5">
+                <div className={`h-1.5 w-1.5 rounded-full ${healthDot[systemHealth.overall]}`} />
+                <span className="text-[11px] font-medium">Syssie — System Status</span>
+              </div>
+              <button onClick={() => setShowSyssie(false)} className="p-0.5 rounded hover:bg-secondary">
+                <X className="h-3 w-3 text-muted-foreground" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-3 space-y-1">
+              {systemHealth.issues.map((issue, i) => (
+                <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border/40 last:border-0">
+                  <span className={`text-[10px] mt-0.5 ${sevColor[issue.severity]}`}>●</span>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[11px]">{issue.label}</span>
+                    {issue.action && (
+                      <button className="block text-[10px] text-accent hover:underline mt-0.5">{issue.action}</button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="border-t p-2">
+              <button className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded bg-secondary text-[11px] text-foreground hover:bg-secondary/80 transition-colors">
+                <MessageSquare className="h-3 w-3" />
+                Talk to Syssie
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

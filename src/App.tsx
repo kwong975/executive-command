@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import TodayPage from "./pages/TodayPage";
 import AgentsPage from "./pages/AgentsPage";
 import MattersPage from "./pages/MattersPage";
-import UnassignedPage from "./pages/UnassignedPage";
 import StrategyPage from "./pages/StrategyPage";
 import NotFound from "./pages/NotFound";
 
@@ -22,7 +21,6 @@ const App = () => (
           <Route path="/" element={<TodayPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/matters" element={<MattersPage />} />
-          <Route path="/unassigned" element={<UnassignedPage />} />
           <Route path="/strategy" element={<StrategyPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
