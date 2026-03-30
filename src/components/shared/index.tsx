@@ -28,7 +28,7 @@ const dotColor: Record<string, string> = {
 };
 
 export function StatusDot({ status, size = "sm" }: { status: string; size?: "sm" | "md" }) {
-  const s = size === "md" ? "h-2 w-2" : "h-1.5 w-1.5";
+  const s = size === "md" ? "h-2.5 w-2.5" : "h-2 w-2";
   return <div className={cn("rounded-full shrink-0", s, dotColor[status] || "bg-muted-foreground")} />;
 }
 
@@ -57,7 +57,7 @@ const pillColor: Record<string, string> = {
 
 export function StatusPill({ status }: { status: string }) {
   return (
-    <span className={cn("text-[10px] px-1.5 py-0.5 rounded font-medium", pillColor[status] || "bg-muted text-muted-foreground")}>
+    <span className={cn("text-[11px] px-2 py-0.5 rounded font-medium leading-none", pillColor[status] || "bg-muted text-muted-foreground")}>
       {status}
     </span>
   );
@@ -70,16 +70,16 @@ export function SectionLabel({ children, count, accent }: {
   accent?: "destructive" | "warning";
 }) {
   return (
-    <div className="flex items-center gap-2 mb-1 px-2">
+    <div className="flex items-center gap-2 mb-1.5 px-2.5">
       <span className={cn(
-        "text-xs font-semibold uppercase tracking-wider",
+        "text-[12px] font-semibold uppercase tracking-wider",
         accent === "destructive" ? "text-destructive" :
         accent === "warning" ? "text-warning" : "text-muted-foreground"
       )}>
         {children}
       </span>
       {count !== undefined && (
-        <span className="text-[11px] font-mono text-muted-foreground">{count}</span>
+        <span className="text-[12px] font-mono text-muted-foreground">{count}</span>
       )}
     </div>
   );
@@ -92,16 +92,16 @@ export function GroupHeader({ label, count, open, onToggle, accent }: {
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center gap-2 px-2.5 py-1.5 text-left border-b border-border/30 hover:bg-secondary/30 transition-colors sticky top-0 bg-background z-10"
+      className="w-full flex items-center gap-2 px-3 py-2 text-left border-b border-border/30 hover:bg-secondary/30 transition-colors sticky top-0 bg-background z-10"
     >
-      <ChevronRight className={cn("h-3 w-3 text-muted-foreground transition-transform", open && "rotate-90")} />
+      <ChevronRight className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-90")} />
       <span className={cn(
-        "text-xs font-semibold uppercase tracking-wider",
+        "text-[12px] font-semibold uppercase tracking-wider",
         accent === "destructive" ? "text-destructive" : accent === "warning" ? "text-warning" : "text-muted-foreground"
       )}>
         {label}
       </span>
-      <span className="text-[11px] font-mono text-muted-foreground">{count}</span>
+      <span className="text-[12px] font-mono text-muted-foreground">{count}</span>
     </button>
   );
 }
@@ -119,7 +119,7 @@ export function InlineAction({ icon, label, accent, destructive, onClick, classN
     <button
       onClick={onClick}
       className={cn(
-        "text-[11px] px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors font-medium",
+        "text-[12px] px-2 py-1 rounded flex items-center gap-1.5 transition-colors font-medium",
         accent
           ? "bg-accent text-accent-foreground hover:bg-accent/90"
           : destructive
@@ -147,7 +147,7 @@ export function DenseRow({ children, selected, onClick, className: cls, urgencyB
     <div
       onClick={onClick}
       className={cn(
-        "flex items-center justify-between px-2.5 py-1.5 group transition-colors border-b border-border/15",
+        "flex items-center justify-between px-3 py-2 group transition-colors border-b border-border/15",
         selected ? "bg-secondary" : "hover:bg-secondary/40",
         onClick && "cursor-pointer",
         borderCls,
@@ -161,15 +161,15 @@ export function DenseRow({ children, selected, onClick, className: cls, urgencyB
 
 // ===== SIGNAL (for agent overview) =====
 export function Signal({ type, text, action }: { type: "ok" | "warn" | "error"; text: string; action?: string }) {
-  const icon = type === "ok" ? <Check className="h-3 w-3 text-success" /> :
-    type === "error" ? <AlertTriangle className="h-3 w-3 text-destructive" /> :
-    <AlertTriangle className="h-3 w-3 text-warning" />;
+  const icon = type === "ok" ? <Check className="h-3.5 w-3.5 text-success" /> :
+    type === "error" ? <AlertTriangle className="h-3.5 w-3.5 text-destructive" /> :
+    <AlertTriangle className="h-3.5 w-3.5 text-warning" />;
   return (
-    <div className="flex items-center justify-between py-1 group">
+    <div className="flex items-center justify-between py-1.5 group">
       <div className="flex items-center gap-2">
         {icon}
         <span className={cn(
-          "text-[13px]",
+          "text-sm",
           type === "error" ? "text-destructive" : type === "warn" ? "text-warning" : "text-success"
         )}>{text}</span>
       </div>
@@ -182,10 +182,10 @@ export function Signal({ type, text, action }: { type: "ok" | "warn" | "error"; 
 
 // ===== COLUMN LABEL =====
 export function ColLabel({ children }: { children: React.ReactNode }) {
-  return <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">{children}</div>;
+  return <div className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">{children}</div>;
 }
 
 // ===== LABEL =====
 export function Label({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("text-xs font-semibold uppercase tracking-wider mb-1", className || "text-muted-foreground")}>{children}</div>;
+  return <div className={cn("text-[12px] font-semibold uppercase tracking-wider mb-1.5", className || "text-muted-foreground")}>{children}</div>;
 }
