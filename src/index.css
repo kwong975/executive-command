@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,56 +6,57 @@
 
 @layer base {
   :root {
-    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-body: 'DM Sans', system-ui, sans-serif;
+    --font-display: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
 
-    --background: 40 20% 98%;
-    --foreground: 220 20% 14%;
+    --background: 220 14% 8%;
+    --foreground: 220 10% 92%;
 
-    --card: 40 15% 96%;
-    --card-foreground: 220 20% 14%;
+    --card: 220 14% 10%;
+    --card-foreground: 220 10% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 14%;
+    --popover: 220 14% 12%;
+    --popover-foreground: 220 10% 92%;
 
-    --primary: 220 16% 22%;
-    --primary-foreground: 40 20% 98%;
+    --primary: 220 10% 92%;
+    --primary-foreground: 220 14% 8%;
 
-    --secondary: 35 12% 92%;
-    --secondary-foreground: 220 16% 22%;
+    --secondary: 220 12% 14%;
+    --secondary-foreground: 220 10% 72%;
 
-    --muted: 35 10% 94%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 220 12% 14%;
+    --muted-foreground: 220 8% 48%;
 
-    --accent: 175 40% 40%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 175 60% 45%;
+    --accent-foreground: 220 14% 8%;
 
-    --destructive: 0 65% 55%;
+    --destructive: 0 62% 55%;
     --destructive-foreground: 0 0% 100%;
 
     --warning: 38 90% 55%;
     --warning-foreground: 30 80% 15%;
 
-    --success: 160 50% 42%;
+    --success: 142 60% 45%;
     --success-foreground: 0 0% 100%;
 
-    --surface-elevated: 0 0% 100%;
+    --surface-elevated: 220 14% 11%;
 
-    --border: 35 12% 89%;
-    --input: 35 12% 89%;
-    --ring: 220 16% 22%;
+    --border: 220 12% 16%;
+    --input: 220 12% 16%;
+    --ring: 175 60% 45%;
 
-    --radius: 0.625rem;
+    --radius: 0.375rem;
 
-    --sidebar-background: 220 16% 22%;
-    --sidebar-foreground: 220 10% 75%;
-    --sidebar-primary: 0 0% 100%;
-    --sidebar-primary-foreground: 220 16% 22%;
-    --sidebar-accent: 220 14% 28%;
-    --sidebar-accent-foreground: 220 10% 85%;
-    --sidebar-border: 220 14% 28%;
-    --sidebar-ring: 175 40% 40%;
-    --sidebar-muted: 220 10% 45%;
+    --sidebar-background: 220 14% 6%;
+    --sidebar-foreground: 220 8% 48%;
+    --sidebar-primary: 220 10% 92%;
+    --sidebar-primary-foreground: 220 14% 8%;
+    --sidebar-accent: 220 12% 14%;
+    --sidebar-accent-foreground: 220 10% 88%;
+    --sidebar-border: 220 12% 14%;
+    --sidebar-ring: 175 60% 45%;
+    --sidebar-muted: 220 8% 38%;
   }
 }
 
@@ -67,12 +68,30 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: -0.02em;
+  }
+
+  /* Custom scrollbar for dark mode */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(220 12% 20%);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(220 12% 28%);
   }
 }
 
@@ -82,5 +101,8 @@
   }
   .font-body {
     font-family: var(--font-body);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
   }
 }
