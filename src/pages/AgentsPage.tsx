@@ -22,7 +22,7 @@ export default function AgentsPage() {
   const [chatAgent, setChatAgent] = useState<Agent | null>(null);
 
   return (
-    <AppLayout>
+    <AppLayout title="Agents">
       <div className="flex flex-1 overflow-hidden">
         {/* Agent list sidebar */}
         <div className="w-56 border-r flex flex-col shrink-0 overflow-y-auto">
