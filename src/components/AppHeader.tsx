@@ -3,6 +3,7 @@ import { systemHealth } from "@/data/mockData";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { StatusDot, InlineAction } from "@/components/shared";
 import { X, MessageSquare, Play, AlertTriangle, Check } from "lucide-react";
+import { IS_MOCK_MODE } from "@/lib/api";
 
 const healthDot: Record<string, string> = { green: "active", yellow: "warning", red: "error" };
 
@@ -16,6 +17,11 @@ export function AppHeader({ title }: { title?: string }) {
           <SidebarTrigger className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
           {title && (
             <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.1em]">{title}</span>
+          )}
+          {IS_MOCK_MODE && (
+            <span className="text-[10px] px-2 py-0.5 rounded-md bg-accent/10 text-accent font-medium border border-accent/20">
+              Preview
+            </span>
           )}
         </div>
         <button

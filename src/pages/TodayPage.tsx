@@ -41,11 +41,13 @@ export default function TodayPage() {
     );
   }
 
-  if (isError) {
+  // In mock/fallback mode, isError should never fire.
+  // If it does, render empty state instead of alarming error.
+  if (isError && !data) {
     return (
       <AppLayout title="Today">
-        <div className="flex items-center justify-center h-full text-destructive gap-2">
-          <AlertTriangle className="h-4 w-4" /><span className="text-[13px]">Failed to load Today data. Backend may be unreachable.</span>
+        <div className="flex items-center justify-center h-full text-muted-foreground gap-2">
+          <AlertTriangle className="h-4 w-4" /><span className="text-[13px]">No data available yet.</span>
         </div>
       </AppLayout>
     );
