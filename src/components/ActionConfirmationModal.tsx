@@ -45,16 +45,16 @@ export function ActionConfirmationModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" onClick={onCancel}>
+    <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={onCancel}>
       <div className={cn("bg-card border rounded-lg shadow-xl w-[420px] overflow-hidden",
-        isHighRisk ? "border-critical/40" : "border-border"
+        isHighRisk ? "border-destructive/40" : "border-border/50"
       )} onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className={cn("flex items-center gap-3 px-5 py-4 border-b",
-          isHighRisk ? "border-critical/20 bg-critical/5" : "border-border"
+          isHighRisk ? "border-destructive/20 bg-destructive/5" : "border-border/50"
         )}>
           {isHighRisk
-            ? <AlertTriangle className="h-5 w-5 text-critical shrink-0" />
+            ? <AlertTriangle className="h-5 w-5 text-destructive shrink-0" />
             : <Shield className="h-5 w-5 text-warning shrink-0" />
           }
           <div>
@@ -71,24 +71,24 @@ export function ActionConfirmationModal({
             onChange={e => setReason(e.target.value)}
             placeholder="Why are you making this change?"
             rows={2}
-            className="w-full mt-1 px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-full mt-1 px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-1 focus:ring-accent/50"
           />
         </div>
 
         {/* Actions */}
-        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-border bg-accent/20">
+        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-border/50 bg-secondary/20">
           <button
             onClick={onCancel}
-            className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors h-8"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirm}
-            className={cn("px-4 py-1.5 text-sm font-medium rounded-md transition-colors",
+            className={cn("px-4 py-1.5 text-sm font-medium rounded-md transition-colors h-8 shadow-sm",
               isHighRisk
-                ? "bg-critical text-white hover:bg-critical/90"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
+                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                : "bg-accent text-accent-foreground hover:bg-accent/90"
             )}
           >
             {confirmLabel}

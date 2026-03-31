@@ -102,11 +102,11 @@ export default function MattersPage() {
     <AppLayout title="Matters">
       <div className="flex flex-1 overflow-hidden">
         {/* LEFT — Queue */}
-        <div className="w-72 border-r border-border/30 flex flex-col shrink-0 overflow-y-auto">
+        <div className="w-72 border-r border-border/50 flex flex-col shrink-0 overflow-y-auto">
           {mattersLoading ? (
             <div className="flex items-center justify-center py-8 text-muted-foreground gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-[13px]">Loading matters...</span>
+              <span className="text-sm">Loading matters...</span>
             </div>
           ) : (
             <>
@@ -130,8 +130,8 @@ export default function MattersPage() {
                 <MatterRow key={m.id} matter={m} selected={selectedId === m.id} onClick={() => { setSelectedId(m.id); setDetailTab("threads"); }} onChat={() => openChat(m.id)} onArchive={() => handleArchive(m.id)} stale />
               ))}
 
-              <div className="px-3 py-2.5 border-t border-border/20">
-                <button onClick={() => setShowCreateModal(true)} className="w-full text-[11px] py-2 rounded-md bg-secondary text-muted-foreground hover:text-foreground flex items-center justify-center gap-1.5 transition-colors font-medium">
+              <div className="px-3 py-2.5 border-t border-border/30">
+                <button onClick={() => setShowCreateModal(true)} className="w-full text-xs py-2 rounded-md bg-secondary text-muted-foreground hover:text-foreground flex items-center justify-center gap-1.5 transition-colors font-medium h-8">
                   <Plus className="h-3 w-3" />New matter
                 </button>
               </div>
@@ -161,7 +161,7 @@ export default function MattersPage() {
               onAssignOwner={handleAssignOwner}
             />
           ) : (
-            <div className="flex items-center justify-center h-full text-[13px] text-muted-foreground font-mono">
+            <div className="flex items-center justify-center h-full text-sm text-muted-foreground font-mono">
               {mattersLoading ? "Loading..." : allMatters.length === 0 ? "No matters found" : "Select a matter to inspect"}
             </div>
           )}
@@ -183,13 +183,13 @@ function MatterRow({ matter, selected, onClick, onChat, onArchive, stale }: {
     <DenseRow selected={selected} onClick={onClick}>
       <div className="flex items-center gap-2.5 min-w-0 flex-1">
         <StatusDot status={matter.status} />
-        <span className="text-[13px] truncate font-medium">{matter.title}</span>
+        <span className="text-sm truncate font-medium">{matter.title}</span>
         {matter.overdueCount > 0 && (
-          <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-destructive/15 text-destructive shrink-0 font-semibold tabular-nums">{matter.overdueCount}</span>
+          <span className="text-xs px-1.5 py-0.5 rounded-md bg-destructive/15 text-destructive shrink-0 font-semibold tabular-nums">{matter.overdueCount}</span>
         )}
       </div>
       <div className="flex items-center gap-1.5 shrink-0">
-        <span className="text-[11px] text-muted-foreground font-mono">{matter.owner}</span>
+        <span className="text-xs text-muted-foreground font-mono">{matter.owner}</span>
         <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
           <button onClick={e => { e.stopPropagation(); }} className="p-1 rounded-md hover:bg-secondary"><UserPlus className="h-3 w-3 text-muted-foreground" /></button>
           {stale && <button onClick={e => { e.stopPropagation(); onArchive(); }} className="p-1 rounded-md hover:bg-secondary"><Archive className="h-3 w-3 text-muted-foreground" /></button>}
@@ -204,8 +204,8 @@ function UnassignedRow({ thread, onAssign, onDismiss }: { thread: Thread; onAssi
   return (
     <DenseRow>
       <div className="min-w-0 flex-1">
-        <div className="text-[13px] truncate">{thread.title}</div>
-        <div className="text-[11px] text-muted-foreground">{thread.source} · {thread.age || thread.timestamp}</div>
+        <div className="text-sm truncate">{thread.title}</div>
+        <div className="text-xs text-muted-foreground">{thread.source} · {thread.age || thread.timestamp}</div>
       </div>
       <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
         <InlineAction onClick={onAssign} icon={<UserPlus className="h-3 w-3" />} label="Assign" accent />
@@ -239,32 +239,32 @@ function MatterDetail({ matter, linkedGoals, tab, onTabChange, onChat, onComplet
   return (
     <div className="max-w-3xl">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-border/20">
+      <div className="px-4 pt-4 pb-3 border-b border-border/30">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2.5">
             <StatusDot status={matter.status} size="md" />
-            <span className="text-[14px] font-semibold">{matter.title}</span>
-            {matter.businessUnit && <span className="text-[11px] font-mono text-muted-foreground bg-secondary px-2 py-0.5 rounded-md">{matter.businessUnit}</span>}
+            <span className="text-sm font-semibold">{matter.title}</span>
+            {matter.businessUnit && <span className="text-xs font-mono text-muted-foreground bg-secondary px-2 py-0.5 rounded-md">{matter.businessUnit}</span>}
             <StatusPill status={matter.status} />
           </div>
           <div className="flex items-center gap-1.5 relative">
-            <InlineAction icon={<UserPlus className="h-3 w-3" />} label="Assign Owner" onClick={() => setShowOwnerPicker(!showOwnerPicker)} />
+            <InlineAction icon={<UserPlus className="h-3 w-3" />} label="Assign owner" onClick={() => setShowOwnerPicker(!showOwnerPicker)} />
             <InlineAction icon={<Archive className="h-3 w-3" />} label="Archive" />
             <InlineAction icon={<Play className="h-3 w-3" />} label="Command" accent onClick={onChat} />
             {showOwnerPicker && (
-              <div className="absolute right-0 top-full mt-1 w-56 bg-popover border border-border/40 rounded-lg shadow-xl z-20 py-1 max-h-48 overflow-y-auto">
+              <div className="absolute right-0 top-full mt-1 w-56 bg-popover border border-border/50 rounded-lg shadow-xl z-20 py-1 max-h-48 overflow-y-auto">
                 {matter.people.length > 0 ? matter.people.map(p => (
                   <button
                     key={p.id}
                     onClick={() => { onAssignOwner(p.id); setShowOwnerPicker(false); }}
-                    className="w-full text-left px-3 py-2 text-[13px] hover:bg-secondary transition-colors flex items-center gap-2.5"
+                    className="w-full text-left px-3 py-2 text-sm hover:bg-secondary transition-colors flex items-center gap-2.5"
                   >
-                    <div className="h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-[10px] font-semibold">{p.name.charAt(0)}</div>
+                    <div className="h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-xs font-semibold">{p.name.charAt(0)}</div>
                     <span>{p.name}</span>
-                    {p.role === "owner" && <span className="text-[10px] text-accent ml-auto font-medium">current</span>}
+                    {p.role === "owner" && <span className="text-xs text-accent ml-auto font-medium">current</span>}
                   </button>
                 )) : (
-                  <div className="px-3 py-2 text-[13px] text-muted-foreground">No participants yet</div>
+                  <div className="px-3 py-2 text-sm text-muted-foreground">No participants yet</div>
                 )}
               </div>
             )}
@@ -272,7 +272,7 @@ function MatterDetail({ matter, linkedGoals, tab, onTabChange, onChat, onComplet
         </div>
 
         {/* Meta */}
-        <div className="flex items-center gap-4 text-[12px] text-muted-foreground">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span>Owner: <span className="text-foreground font-medium">{matter.owner}</span></span>
           {matter.people.length > 0 && (
             <span className="flex items-center gap-1">
@@ -290,7 +290,7 @@ function MatterDetail({ matter, linkedGoals, tab, onTabChange, onChat, onComplet
           )}
         </div>
 
-        {matter.description && <p className="text-[12px] text-foreground/50 mt-2 leading-relaxed">{matter.description}</p>}
+        {matter.description && <p className="text-xs text-foreground/50 mt-2 leading-relaxed">{matter.description}</p>}
       </div>
 
       {/* Tab bar */}
@@ -298,18 +298,17 @@ function MatterDetail({ matter, linkedGoals, tab, onTabChange, onChat, onComplet
 
       {/* Content */}
       <div className="px-4 py-3">
-        {/* Threads */}
         {tab === "threads" && (
           <div>
             {matter.threads.map(t => (
-              <div key={t.id} className="py-2 border-b border-border/10 last:border-0 group">
+              <div key={t.id} className="py-2 border-b border-border/20 last:border-0 group">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5 min-w-0">
                     <StatusDot status={t.status} />
-                    <span className="text-[13px] truncate font-medium">{t.title}</span>
+                    <span className="text-sm truncate font-medium">{t.title}</span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[11px] text-muted-foreground">{t.source} · {t.timestamp}</span>
+                    <span className="text-xs text-muted-foreground">{t.source} · {t.timestamp}</span>
                     <StatusPill status={t.status} />
                     <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button className="p-1 rounded-md hover:bg-secondary"><ArrowRight className="h-3 w-3 text-muted-foreground" /></button>
@@ -317,25 +316,24 @@ function MatterDetail({ matter, linkedGoals, tab, onTabChange, onChat, onComplet
                     </div>
                   </div>
                 </div>
-                {t.summary !== t.title && <div className="text-[12px] text-muted-foreground mt-1 pl-[19px]">{t.summary}</div>}
+                {t.summary !== t.title && <div className="text-xs text-muted-foreground mt-1 pl-[19px]">{t.summary}</div>}
               </div>
             ))}
             {matter.threads.length === 0 && <EmptyState text="No threads" />}
           </div>
         )}
 
-        {/* Commitments */}
         {tab === "commitments" && (
           <div>
             {matter.commitments.map(c => (
-              <div key={c.id} className="flex items-center justify-between py-2 border-b border-border/10 last:border-0 group">
+              <div key={c.id} className="flex items-center justify-between py-2 border-b border-border/20 last:border-0 group">
                 <div className="flex items-center gap-2.5">
                   <StatusDot status={c.status} />
-                  <span className="text-[13px] font-medium">{c.title}</span>
+                  <span className="text-sm font-medium">{c.title}</span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <span className="text-[11px] text-muted-foreground font-mono">{c.owner}</span>
-                  <span className="text-[11px] text-muted-foreground">{c.dueDate}</span>
+                  <span className="text-xs text-muted-foreground font-mono">{c.owner}</span>
+                  <span className="text-xs text-muted-foreground">{c.dueDate}</span>
                   <StatusPill status={c.status} />
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onClick={() => onCompleteCommitment(c.id)} className="p-1 rounded-md hover:bg-secondary"><Check className="h-3 w-3 text-muted-foreground" /></button>
@@ -348,58 +346,56 @@ function MatterDetail({ matter, linkedGoals, tab, onTabChange, onChat, onComplet
           </div>
         )}
 
-        {/* Artifacts */}
         {tab === "artifacts" && (
           <div>
             {matter.artifacts.map(ar => (
-              <div key={ar.id} className="flex items-center justify-between py-2 border-b border-border/10 last:border-0 group">
+              <div key={ar.id} className="flex items-center justify-between py-2 border-b border-border/20 last:border-0 group">
                 <div className="flex items-center gap-2.5 text-muted-foreground">
                   {artifactIcon[ar.source] || <FileText className="h-3 w-3" />}
-                  <span className="text-[13px] text-foreground">{ar.title}</span>
-                  <span className="text-[11px]">{ar.source}</span>
+                  <span className="text-sm text-foreground">{ar.title}</span>
+                  <span className="text-xs">{ar.source}</span>
                 </div>
-                <span className="text-[11px] text-muted-foreground">{ar.timestamp}</span>
+                <span className="text-xs text-muted-foreground">{ar.timestamp}</span>
               </div>
             ))}
             {matter.artifacts.length === 0 && <EmptyState text="No artifacts" />}
           </div>
         )}
 
-        {/* People */}
         {tab === "people" && (() => {
           const owner = matter.people.find(p => p.role === "owner");
           const others = matter.people.filter(p => p.role !== "owner");
           return (
             <div>
               {owner ? (
-                <div className="flex items-center justify-between py-2.5 border-b border-border/20 mb-1">
+                <div className="flex items-center justify-between py-2.5 border-b border-border/30 mb-1">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-6 w-6 rounded-full bg-accent/20 flex items-center justify-center text-[11px] font-semibold text-accent">
+                    <div className="h-6 w-6 rounded-full bg-accent/20 flex items-center justify-center text-xs font-semibold text-accent">
                       {owner.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-[13px] font-medium">{owner.name}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded-md bg-accent/15 text-accent font-semibold border border-accent/20">Owner</span>
+                    <span className="text-sm font-medium">{owner.name}</span>
+                    <span className="text-xs px-2 py-0.5 rounded-md bg-accent/15 text-accent font-semibold border border-accent/20">Owner</span>
                   </div>
                   <InlineAction label="Reassign" icon={<UserPlus className="h-3 w-3" />} />
                 </div>
               ) : (
-                <div className="flex items-center justify-between py-2.5 border-b border-border/20 mb-1 text-warning">
+                <div className="flex items-center justify-between py-2.5 border-b border-border/30 mb-1 text-warning">
                   <div className="flex items-center gap-2.5">
                     <UserPlus className="h-4 w-4" />
-                    <span className="text-[13px]">No owner assigned</span>
+                    <span className="text-sm">No owner assigned</span>
                   </div>
                   <InlineAction label="Assign owner" accent />
                 </div>
               )}
 
               {others.map(p => (
-                <div key={p.id} className="flex items-center justify-between py-2 border-b border-border/10 last:border-0 group">
+                <div key={p.id} className="flex items-center justify-between py-2 border-b border-border/20 last:border-0 group">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-[10px] font-medium text-muted-foreground">
+                    <div className="h-5 w-5 rounded-full bg-secondary flex items-center justify-center text-xs font-medium text-muted-foreground">
                       {p.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="text-[13px]">{p.name}</span>
-                    <span className="text-[11px] text-muted-foreground">{p.role}</span>
+                    <span className="text-sm">{p.name}</span>
+                    <span className="text-xs text-muted-foreground">{p.role}</span>
                   </div>
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <InlineAction label="Make owner" />

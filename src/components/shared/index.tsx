@@ -66,7 +66,7 @@ const pillColor: Record<string, string> = {
 export function StatusPill({ status }: { status: string }) {
   return (
     <span className={cn(
-      "text-[11px] px-2 py-0.5 rounded-md font-medium leading-none border capitalize",
+      "text-xs px-2 py-0.5 rounded-md font-medium leading-none border capitalize",
       pillColor[status] || "bg-muted/60 text-muted-foreground border-border/30"
     )}>
       {status.replace("-", " ")}
@@ -81,9 +81,9 @@ export function SectionLabel({ children, count, accent }: {
   accent?: "destructive" | "warning";
 }) {
   return (
-    <div className="flex items-center gap-2.5 mb-2 px-3">
+    <div className="flex items-center gap-2.5 mb-2 px-1">
       <span className={cn(
-        "text-[11px] font-semibold uppercase tracking-[0.08em]",
+        "text-xs font-semibold uppercase tracking-widest",
         accent === "destructive" ? "text-destructive" :
         accent === "warning" ? "text-warning" : "text-muted-foreground"
       )}>
@@ -91,7 +91,7 @@ export function SectionLabel({ children, count, accent }: {
       </span>
       {count !== undefined && (
         <span className={cn(
-          "text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
+          "text-xs font-mono tabular-nums px-1.5 py-0.5 rounded-md",
           accent === "destructive" ? "bg-destructive/10 text-destructive" :
           accent === "warning" ? "bg-warning/10 text-warning" :
           "bg-secondary text-muted-foreground"
@@ -108,17 +108,17 @@ export function GroupHeader({ label, count, open, onToggle, accent }: {
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center gap-2 px-3 py-2.5 text-left border-b border-border/20 hover:bg-secondary/40 transition-colors sticky top-0 bg-background/95 backdrop-blur-sm z-10"
+      className="w-full flex items-center gap-2 px-3 py-2.5 text-left border-b border-border/30 hover:bg-secondary/40 transition-colors sticky top-0 bg-background/95 backdrop-blur-sm z-10"
     >
       <ChevronRight className={cn("h-3 w-3 text-muted-foreground transition-transform duration-150", open && "rotate-90")} />
       <span className={cn(
-        "text-[11px] font-semibold uppercase tracking-[0.08em]",
+        "text-xs font-semibold uppercase tracking-widest",
         accent === "destructive" ? "text-destructive" : accent === "warning" ? "text-warning" : "text-muted-foreground"
       )}>
         {label}
       </span>
       <span className={cn(
-        "text-[11px] font-mono tabular-nums px-1.5 py-0.5 rounded-md",
+        "text-xs font-mono tabular-nums px-1.5 py-0.5 rounded-md",
         accent === "destructive" ? "bg-destructive/10 text-destructive" :
         accent === "warning" ? "bg-warning/10 text-warning" :
         "bg-secondary text-muted-foreground"
@@ -140,12 +140,12 @@ export function InlineAction({ icon, label, accent, destructive, onClick, classN
     <button
       onClick={onClick}
       className={cn(
-        "text-[11px] px-2 py-1 rounded-md flex items-center gap-1 transition-all duration-150 font-medium",
+        "text-xs px-2 py-1 rounded-md flex items-center gap-1 transition-all duration-150 font-medium h-7",
         accent
-          ? "bg-accent/90 text-accent-foreground hover:bg-accent shadow-sm shadow-accent/10"
+          ? "bg-accent text-accent-foreground hover:bg-accent/90 shadow-sm"
           : destructive
           ? "hover:bg-destructive/15 text-muted-foreground hover:text-destructive"
-          : "bg-secondary/80 text-muted-foreground hover:text-foreground hover:bg-secondary",
+          : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80",
         cls
       )}
     >
@@ -168,8 +168,8 @@ export function DenseRow({ children, selected, onClick, className: cls, urgencyB
     <div
       onClick={onClick}
       className={cn(
-        "flex items-center justify-between px-3 py-[7px] group transition-all duration-100 border-b border-border/10",
-        selected ? "bg-secondary/80 shadow-inner" : "hover:bg-secondary/30",
+        "flex items-center justify-between px-3 py-2 group transition-all duration-100 border-b border-border/20 rounded-sm",
+        selected ? "bg-secondary/80" : "hover:bg-secondary/40",
         onClick && "cursor-pointer",
         borderCls,
         cls
@@ -190,7 +190,7 @@ export function Signal({ type, text, action }: { type: "ok" | "warn" | "error"; 
       <div className="flex items-center gap-2.5">
         {icon}
         <span className={cn(
-          "text-[13px]",
+          "text-sm",
           type === "error" ? "text-destructive" : type === "warn" ? "text-warning" : "text-muted-foreground"
         )}>{text}</span>
       </div>
@@ -203,18 +203,18 @@ export function Signal({ type, text, action }: { type: "ok" | "warn" | "error"; 
 
 // ===== COLUMN LABEL =====
 export function ColLabel({ children }: { children: React.ReactNode }) {
-  return <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.08em] mb-2">{children}</div>;
+  return <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">{children}</div>;
 }
 
 // ===== LABEL =====
 export function Label({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("text-[11px] font-semibold uppercase tracking-[0.08em] mb-2", className || "text-muted-foreground")}>{children}</div>;
+  return <div className={cn("text-xs font-semibold uppercase tracking-widest mb-2", className || "text-muted-foreground")}>{children}</div>;
 }
 
 // ===== PANEL HEADER =====
 export function PanelHeader({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("h-11 border-b border-border/30 px-4 flex items-center justify-between shrink-0", className)}>
+    <div className={cn("h-11 border-b border-border/50 px-4 flex items-center justify-between shrink-0", className)}>
       {children}
     </div>
   );
@@ -227,13 +227,13 @@ export function TabBar({ tabs, active, onChange }: {
   onChange: (id: string) => void;
 }) {
   return (
-    <div className="border-b border-border/30 px-4 flex items-center shrink-0">
+    <div className="border-b border-border/50 px-4 flex items-center shrink-0">
       {tabs.map(t => (
         <button
           key={t.id}
           onClick={() => onChange(t.id)}
           className={cn(
-            "px-3 py-2 text-[13px] font-medium border-b-2 transition-colors relative",
+            "px-3 py-2.5 text-sm font-medium border-b-2 transition-colors relative",
             active === t.id
               ? "border-accent text-foreground"
               : "border-transparent text-muted-foreground hover:text-foreground"
@@ -241,10 +241,10 @@ export function TabBar({ tabs, active, onChange }: {
         >
           {t.label}
           {t.count !== undefined && (
-            <span className="ml-1.5 text-[10px] font-mono tabular-nums text-muted-foreground">{t.count}</span>
+            <span className="ml-1.5 text-xs font-mono tabular-nums text-muted-foreground">{t.count}</span>
           )}
           {t.alert && (
-            <span className="ml-1 text-[10px] text-destructive font-bold">!</span>
+            <span className="ml-1 text-xs text-destructive font-bold">!</span>
           )}
         </button>
       ))}
@@ -255,7 +255,7 @@ export function TabBar({ tabs, active, onChange }: {
 // ===== EMPTY STATE =====
 export function EmptyState({ text, icon }: { text: string; icon?: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-[13px] text-muted-foreground py-3 px-3">
+    <div className="flex items-center gap-2 text-sm text-muted-foreground py-3 px-3">
       {icon}
       <span>{text}</span>
     </div>

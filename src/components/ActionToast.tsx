@@ -37,7 +37,7 @@ export function ActionToastContainer() {
       {toasts.map(t => (
         <div key={t.id} className={cn(
           "flex items-center gap-2 px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium animate-in slide-in-from-bottom-2",
-          t.type === "success" ? "bg-success/10 text-success border border-success/20" : "bg-critical/10 text-critical border border-critical/20"
+          t.type === "success" ? "bg-success/10 text-success border border-success/20" : "bg-destructive/10 text-destructive border border-destructive/20"
         )}>
           {t.type === "success" ? <CheckCircle2 className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
           {t.message}
