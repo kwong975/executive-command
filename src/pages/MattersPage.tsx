@@ -564,7 +564,7 @@ function MatterDetailPanel({ matter, card, linkedGoals, tab, onTabChange, onClos
                   <span className="text-xs text-muted-foreground">{c.dueDate}</span>
                   <StatusPill status={c.status} />
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleCompleteCommitment(c.id)} className="p-1 rounded-md hover:bg-secondary"><Check className="h-3 w-3 text-muted-foreground" /></button>
+                    <button onClick={() => onCompleteCommitment(c.id)} className="p-1 rounded-md hover:bg-secondary"><Check className="h-3 w-3 text-muted-foreground" /></button>
                     <button className="p-1 rounded-md hover:bg-secondary"><UserPlus className="h-3 w-3 text-muted-foreground" /></button>
                   </div>
                 </div>
