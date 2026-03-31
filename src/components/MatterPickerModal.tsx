@@ -26,10 +26,10 @@ export function MatterPickerModal({ open, onSelect, onClose, title = "Link Matte
     : allMatters;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center" onClick={onClose}>
-      <div className="bg-card border border-border rounded-lg shadow-xl w-[480px] max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center" onClick={onClose}>
+      <div className="bg-card border border-border/50 rounded-lg shadow-xl w-[480px] max-h-[70vh] flex flex-col" onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-border/50">
           <span className="text-sm font-semibold">{title}</span>
           <button onClick={onClose} className="p-1 rounded hover:bg-secondary">
             <X className="h-4 w-4 text-muted-foreground" />
@@ -37,7 +37,7 @@ export function MatterPickerModal({ open, onSelect, onClose, title = "Link Matte
         </div>
 
         {/* Search */}
-        <div className="px-4 py-2 border-b">
+        <div className="px-4 py-2 border-b border-border/50">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded bg-secondary">
             <Search className="h-3.5 w-3.5 text-muted-foreground" />
             <input
@@ -67,7 +67,7 @@ export function MatterPickerModal({ open, onSelect, onClose, title = "Link Matte
                 <StatusDot status={m.status} />
                 <div className="flex-1 min-w-0">
                   <div className="text-sm truncate">{m.title}</div>
-                  <div className="text-[12px] text-muted-foreground">{m.owner} · {m.overdueCount > 0 ? `${m.overdueCount} overdue` : m.status}</div>
+                  <div className="text-xs text-muted-foreground">{m.owner} · {m.overdueCount > 0 ? `${m.overdueCount} overdue` : m.status}</div>
                 </div>
               </button>
             ))

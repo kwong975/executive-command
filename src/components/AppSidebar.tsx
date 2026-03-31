@@ -27,7 +27,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarContent className="pt-5">
         <div className={`px-3 mb-6 ${collapsed ? "px-2 text-center" : ""}`}>
-          <span className={`font-mono font-semibold tracking-[0.15em] text-sidebar-primary ${collapsed ? "text-[11px]" : "text-[11px]"}`}>
+          <span className={`font-mono font-semibold tracking-[0.15em] text-sidebar-primary text-xs`}>
             {collapsed ? "AC" : "AGENT COMMAND"}
           </span>
         </div>
@@ -40,7 +40,7 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="flex items-center gap-3 px-3 rounded-md text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-all duration-100 text-[13px]"
+                      className="flex items-center gap-3 px-3 rounded-md text-sidebar-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent transition-all duration-100 text-sm"
                       activeClassName="bg-sidebar-accent text-sidebar-accent-foreground"
                     >
                       <item.icon className="h-[15px] w-[15px] shrink-0" />

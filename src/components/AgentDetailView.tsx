@@ -41,15 +41,15 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
       {/* Header */}
       <PanelHeader>
         <div className="flex items-center gap-3">
-          <span className="text-[12px] font-mono font-semibold bg-secondary px-2 py-1 rounded-md text-muted-foreground">{agent.avatar}</span>
-          <span className="text-[14px] font-semibold">{agent.name}</span>
-          <span className="text-[12px] text-muted-foreground truncate max-w-[200px]">{agent.role}</span>
+          <span className="text-xs font-mono font-semibold bg-secondary px-2 py-1 rounded-md text-muted-foreground">{agent.avatar}</span>
+          <span className="text-sm font-semibold">{agent.name}</span>
+          <span className="text-xs text-muted-foreground truncate max-w-[200px]">{agent.role}</span>
           <StatusDot status={agent.status} size="md" />
           {agent.failedLast24h > 0 && (
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-destructive/10 text-destructive font-semibold border border-destructive/20">{agent.failedLast24h} failed/24h</span>
+            <span className="text-xs px-2 py-0.5 rounded-md bg-destructive/10 text-destructive font-semibold border border-destructive/20">{agent.failedLast24h} failed/24h</span>
           )}
           {agent.stalledWork > 0 && (
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-warning/10 text-warning font-semibold border border-warning/20">{agent.stalledWork} stalled</span>
+            <span className="text-xs px-2 py-0.5 rounded-md bg-warning/10 text-warning font-semibold border border-warning/20">{agent.stalledWork} stalled</span>
           )}
         </div>
         <InlineAction onClick={onOpenChat} icon={<MessageSquare className="h-3 w-3" />} label="Chat" />
@@ -62,7 +62,7 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
       <div className="flex-1 overflow-y-auto px-4 py-3.5">
         {tab === "overview" && (
           <div className="space-y-4 max-w-2xl">
-            <div className="text-[13px] text-foreground/80 leading-relaxed">{agent.purpose}</div>
+            <div className="text-sm text-foreground/80 leading-relaxed">{agent.purpose}</div>
 
             <div>
               <Label>Signals</Label>
@@ -83,7 +83,7 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
               <Label>Responsibilities</Label>
               <div className="flex flex-wrap gap-1.5">
                 {agent.responsibilities.map(r => (
-                  <span key={r} className="text-[11px] px-2.5 py-1 rounded-md bg-secondary text-muted-foreground">{r}</span>
+                  <span key={r} className="text-xs px-2.5 py-1 rounded-md bg-secondary text-muted-foreground">{r}</span>
                 ))}
               </div>
             </div>
@@ -92,25 +92,25 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
 
         {tab === "skills" && (
           <div className="max-w-2xl">
-            {agent.skills.length === 0 && <span className="text-[13px] text-muted-foreground">No skills discovered</span>}
+            {agent.skills.length === 0 && <span className="text-sm text-muted-foreground">No skills discovered</span>}
             {agent.skills.map(s => (
-              <div key={s.id} className="border-b border-border/15 last:border-0">
+              <div key={s.id} className="border-b border-border/30 last:border-0">
                 <div
                   onClick={() => setExpSkill(expSkill === s.id ? null : s.id)}
-                  className="flex items-center justify-between py-2.5 cursor-pointer hover:bg-secondary/20 transition-colors group rounded-sm"
+                  className="flex items-center justify-between py-2.5 cursor-pointer hover:bg-secondary/30 transition-colors group rounded-sm"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-[13px] font-mono">{s.name}</span>
+                    <span className="text-sm font-mono">{s.name}</span>
                     <StatusPill status={s.status} />
                   </div>
                   <div className="flex items-center gap-3">
-                    {s.runs > 0 && <span className="text-[11px] text-muted-foreground tabular-nums font-mono">{s.runs} runs</span>}
+                    {s.runs > 0 && <span className="text-xs text-muted-foreground tabular-nums font-mono">{s.runs} runs</span>}
                     <ChevronRight className={`h-3 w-3 text-muted-foreground transition-transform duration-150 ${expSkill === s.id ? "rotate-90" : ""}`} />
                   </div>
                 </div>
                 {expSkill === s.id && s.description && (
                   <div className="pb-2.5 pl-2">
-                    <p className="text-[12px] text-foreground/60 leading-relaxed">{s.description}</p>
+                    <p className="text-xs text-foreground/60 leading-relaxed">{s.description}</p>
                   </div>
                 )}
               </div>
@@ -120,20 +120,20 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
 
         {tab === "automation" && (
           <div className="max-w-2xl">
-            {agent.cronJobs.length === 0 && <span className="text-[13px] text-muted-foreground">No cron jobs</span>}
+            {agent.cronJobs.length === 0 && <span className="text-sm text-muted-foreground">No cron jobs</span>}
             {agent.cronJobs.map((j, i) => (
-              <div key={i} className="border-b border-border/15 last:border-0">
+              <div key={i} className="border-b border-border/30 last:border-0">
                 <div
                   onClick={() => setExpCron(expCron === j.name ? null : j.name)}
-                  className="flex items-center justify-between py-2.5 cursor-pointer hover:bg-secondary/20 transition-colors group rounded-sm"
+                  className="flex items-center justify-between py-2.5 cursor-pointer hover:bg-secondary/30 transition-colors group rounded-sm"
                 >
                   <div className="flex items-center gap-2.5">
                     <StatusDot status={j.status} />
-                    <span className="text-[13px]">{j.name}</span>
-                    <span className="text-[11px] font-mono text-muted-foreground">{j.schedule}</span>
+                    <span className="text-sm">{j.name}</span>
+                    <span className="text-xs font-mono text-muted-foreground">{j.schedule}</span>
                   </div>
                   <div className="flex items-center gap-2.5">
-                    <span className="text-[11px] text-muted-foreground">{j.lastRun}</span>
+                    <span className="text-xs text-muted-foreground">{j.lastRun}</span>
                     <InlineAction
                       icon={<Play className="h-3 w-3" />}
                       label="Run"
@@ -151,9 +151,9 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
                 </div>
                 {expCron === j.name && (
                   <div className="pb-2.5 pl-6 space-y-1">
-                    {j.nextRun && <div className="text-[12px] text-muted-foreground">Next: {j.nextRun}</div>}
+                    {j.nextRun && <div className="text-xs text-muted-foreground">Next: {j.nextRun}</div>}
                     {j.history && j.history.map((h, hi) => (
-                      <div key={hi} className="flex items-center gap-2 text-[11px] py-0.5">
+                      <div key={hi} className="flex items-center gap-2 text-xs py-0.5">
                         {h.ok ? <Check className="h-3 w-3 text-success" /> : <X className="h-3 w-3 text-destructive" />}
                         <span className="text-muted-foreground">{h.time}</span>
                       </div>
@@ -185,7 +185,7 @@ export function AgentDetailView({ agent, onOpenChat }: { agent: Agent; onOpenCha
                 {staleOwned.map(m => <WorkRow key={m.id} matter={m} stale />)}
               </div>
             )}
-            {owned.length === 0 && <span className="text-[13px] text-muted-foreground">No matters assigned to this agent.</span>}
+            {owned.length === 0 && <span className="text-sm text-muted-foreground">No matters assigned to this agent.</span>}
           </div>
         )}
       </div>
@@ -198,12 +198,12 @@ function WorkRow({ matter, stale }: { matter: { id: string; title: string; statu
     <DenseRow>
       <div className="flex items-center gap-2.5">
         <StatusDot status={matter.status} />
-        <span className="text-[13px]">{matter.title}</span>
-        {matter.businessUnit && <span className="text-[11px] text-muted-foreground font-mono">{matter.businessUnit}</span>}
-        {matter.overdueCount > 0 && <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-destructive/15 text-destructive font-semibold tabular-nums">{matter.overdueCount}</span>}
+        <span className="text-sm">{matter.title}</span>
+        {matter.businessUnit && <span className="text-xs text-muted-foreground font-mono">{matter.businessUnit}</span>}
+        {matter.overdueCount > 0 && <span className="text-xs px-1.5 py-0.5 rounded-md bg-destructive/15 text-destructive font-semibold tabular-nums">{matter.overdueCount}</span>}
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        {matter.lastActivity && <span className="text-[11px] text-muted-foreground">{matter.lastActivity}</span>}
+        {matter.lastActivity && <span className="text-xs text-muted-foreground">{matter.lastActivity}</span>}
         {stale && (
           <InlineAction icon={<Archive className="h-3 w-3" />} label="Archive" className="opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
