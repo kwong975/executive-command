@@ -75,8 +75,6 @@ export default function AgentsPage() {
                 key={agent.id}
                 agent={agent}
                 onOpen={() => openDrawer(agent, "default")}
-                onChat={() => openDrawer(agent, "chat")}
-                onActivity={() => openDrawer(agent, "activity")}
               />
             ))}
           </div>
