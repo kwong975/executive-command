@@ -1,4 +1,4 @@
-import { CalendarDays, Users, FolderOpen, Compass } from "lucide-react";
+import { CalendarDays, Users, FolderOpen, Compass, Radar } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -15,6 +15,7 @@ const navItems = [
   { title: "Today", url: "/", icon: CalendarDays },
   { title: "Agents", url: "/agents", icon: Users },
   { title: "Matters", url: "/matters", icon: FolderOpen },
+  { title: "Strategy Scan", url: "/scan", icon: Radar },
   { title: "Strategy", url: "/strategy", icon: Compass },
 ];
 
