@@ -75,8 +75,6 @@ export default function AgentsPage() {
                 key={agent.id}
                 agent={agent}
                 onOpen={() => openDrawer(agent, "default")}
-                onChat={() => openDrawer(agent, "chat")}
-                onActivity={() => openDrawer(agent, "activity")}
               />
             ))}
           </div>
@@ -98,65 +96,43 @@ export default function AgentsPage() {
 function AgentCard({
   agent,
   onOpen,
-  onChat,
-  onActivity,
 }: {
   agent: Agent;
   onOpen: () => void;
-  onChat: () => void;
-  onActivity: () => void;
 }) {
   const hasErrors = agent.failedLast24h > 0;
   const hasStalled = agent.stalledWork > 0;
   const degradedSkills = agent.skills.filter((s) => s.status === "degraded" || s.status === "disabled").length;
 
-  // Build signals (max 3)
   const signals: { icon: React.ReactNode; text: string; type: "error" | "warning" | "info" }[] = [];
   if (hasErrors) {
-    signals.push({
-      icon: <AlertTriangle className="h-3 w-3" />,
-      text: `${agent.failedLast24h} failed in 24h`,
-      type: "error",
-    });
+    signals.push({ icon: <AlertTriangle className="h-3 w-3" />, text: `${agent.failedLast24h} failed in 24h`, type: "error" });
   }
   if (hasStalled) {
-    signals.push({
-      icon: <Clock className="h-3 w-3" />,
-      text: `${agent.stalledWork} stalled`,
-      type: "warning",
-    });
+    signals.push({ icon: <Clock className="h-3 w-3" />, text: `${agent.stalledWork} stalled`, type: "warning" });
   }
   if (degradedSkills > 0 && signals.length < 3) {
-    signals.push({
-      icon: <AlertTriangle className="h-3 w-3" />,
-      text: `${degradedSkills} skill${degradedSkills > 1 ? "s" : ""} degraded`,
-      type: "warning",
-    });
+    signals.push({ icon: <AlertTriangle className="h-3 w-3" />, text: `${degradedSkills} skill${degradedSkills > 1 ? "s" : ""} degraded`, type: "warning" });
   }
   if (signals.length === 0) {
-    // Last activity as info
     const lastAct = agent.activity[0];
     if (lastAct) {
-      signals.push({
-        icon: <Activity className="h-3 w-3" />,
-        text: `Last: ${lastAct.time}`,
-        type: "info",
-      });
+      signals.push({ icon: <Activity className="h-3 w-3" />, text: `Last: ${lastAct.time}`, type: "info" });
     }
   }
 
   return (
     <div
       className={cn(
-        "rounded-lg border border-border/50 bg-background p-4 flex flex-col gap-3 transition-all duration-150 hover:border-border hover:shadow-sm cursor-pointer group",
+        "rounded-lg border border-border/50 bg-background p-5 flex flex-col gap-4 transition-all duration-150 hover:border-border hover:shadow-sm cursor-pointer group",
         agent.status === "error" && "border-destructive/30"
       )}
       onClick={onOpen}
     >
-      {/* Top — Identity */}
-      <div className="flex items-start gap-3">
+      {/* Top — Identity with larger avatar */}
+      <div className="flex items-center gap-4">
         <div className={cn(
-          "h-10 w-10 rounded-lg flex items-center justify-center text-sm font-mono font-bold shrink-0",
+          "h-14 w-14 rounded-xl flex items-center justify-center text-lg font-mono font-bold shrink-0",
           agent.status === "error"
             ? "bg-destructive/10 text-destructive"
             : agent.status === "idle"
@@ -172,42 +148,24 @@ function AgentCard({
         <StatusPill status={agent.status} />
       </div>
 
-      {/* Middle — Signals */}
+      {/* Signals */}
       <div className="space-y-1.5">
         {signals.map((s, i) => (
-          <div
-            key={i}
-            className={cn(
-              "flex items-center gap-2 text-xs",
-              s.type === "error"
-                ? "text-destructive"
-                : s.type === "warning"
-                ? "text-warning"
-                : "text-muted-foreground"
-            )}
-          >
+          <div key={i} className={cn("flex items-center gap-2 text-xs",
+            s.type === "error" ? "text-destructive" : s.type === "warning" ? "text-warning" : "text-muted-foreground"
+          )}>
             {s.icon}
             <span>{s.text}</span>
           </div>
         ))}
       </div>
 
-      {/* Bottom — Actions */}
-      <div className="flex items-center gap-2 pt-1 border-t border-border/30">
+      {/* Single action */}
+      <div className="pt-1 border-t border-border/30">
         <InlineAction
           icon={<ExternalLink className="h-3 w-3" />}
           label="Open"
           onClick={(e) => { e.stopPropagation(); onOpen(); }}
-        />
-        <InlineAction
-          icon={<MessageSquare className="h-3 w-3" />}
-          label="Chat"
-          onClick={(e) => { e.stopPropagation(); onChat(); }}
-        />
-        <InlineAction
-          icon={<Activity className="h-3 w-3" />}
-          label="Activity"
-          onClick={(e) => { e.stopPropagation(); onActivity(); }}
         />
       </div>
     </div>
