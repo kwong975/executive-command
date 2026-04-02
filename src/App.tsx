@@ -5,9 +5,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TodayPage from "./pages/TodayPage";
 import AgentsPage from "./pages/AgentsPage";
-import MattersPage from "./pages/MattersPage";
+import WorkbenchPage from "./pages/WorkbenchPage";
+import ExecutionPage from "./pages/ExecutionPage";
 import StrategyScanPage from "./pages/StrategyScanPage";
-import StrategyPage from "./pages/StrategyPage";
+import GoalLinkingPage from "./pages/GoalLinkingPage";
+import HygienePage from "./pages/HygienePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,9 +23,11 @@ const App = () => (
         <Routes>
           <Route path="/" element={<TodayPage />} />
           <Route path="/agents" element={<AgentsPage />} />
-          <Route path="/matters" element={<MattersPage />} />
+          <Route path="/workbench" element={<WorkbenchPage />} />
+          <Route path="/execution" element={<ExecutionPage />} />
           <Route path="/scan" element={<StrategyScanPage />} />
-          <Route path="/strategy" element={<StrategyPage />} />
+          <Route path="/goal-linking" element={<GoalLinkingPage />} />
+          <Route path="/hygiene" element={<HygienePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,4 +1,7 @@
-import { CalendarDays, Users, FolderOpen, Compass, Radar } from "lucide-react";
+import {
+  CalendarDays, Users, Wrench, ListChecks, Radar,
+  Link2, Sparkles
+} from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -12,11 +15,13 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { title: "Today", url: "/", icon: CalendarDays },
   { title: "Agents", url: "/agents", icon: Users },
-  { title: "Matters", url: "/matters", icon: FolderOpen },
+  { title: "Today", url: "/", icon: CalendarDays },
+  { title: "Workbench", url: "/workbench", icon: Wrench },
+  { title: "Execution", url: "/execution", icon: ListChecks },
   { title: "Strategy Scan", url: "/scan", icon: Radar },
-  { title: "Strategy", url: "/strategy", icon: Compass },
+  { title: "Goal Linking", url: "/goal-linking", icon: Link2 },
+  { title: "Hygiene", url: "/hygiene", icon: Sparkles },
 ];
 
 export function AppSidebar() {
@@ -27,7 +32,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarContent className="pt-5">
         <div className={`px-3 mb-6 ${collapsed ? "px-2 text-center" : ""}`}>
-          <span className={`font-mono font-semibold tracking-[0.15em] text-sidebar-primary text-xs`}>
+          <span className="font-mono font-semibold tracking-[0.15em] text-sidebar-primary text-xs">
             {collapsed ? "AC" : "AGENT COMMAND"}
           </span>
         </div>
